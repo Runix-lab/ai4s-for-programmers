@@ -57,7 +57,8 @@
 <p class="sub">从零基础到能独立判断。每一阶段都有当堂自测，做错了回上一节。</p>
 
 <div class="roadmap">
-  <div class="rstage" data-day="DAY 1">
+  <p class="rday">DAY 1 · 从零到看懂数据</p>
+  <div class="rstage">
     <div class="rdot"><span>1</span></div>
     <div class="rbody">
       <b>建立词汇表</b>
@@ -71,7 +72,7 @@
     </div>
   </div>
 
-  <div class="rstage" data-day="DAY 1">
+  <div class="rstage">
     <div class="rdot"><span>2</span></div>
     <div class="rbody">
       <b>看懂真实数据</b>
@@ -85,7 +86,9 @@
     </div>
   </div>
 
-  <div class="rstage" data-day="DAY 2">
+  <p class="rday">DAY 2 · 从数据到判断力</p>
+
+  <div class="rstage s2">
     <div class="rdot"><span>3</span></div>
     <div class="rbody">
       <b>建立判断力 <em>← 全课核心</em></b>
@@ -100,7 +103,7 @@
     </div>
   </div>
 
-  <div class="rstage" data-day="DAY 2">
+  <div class="rstage s2">
     <div class="rdot"><span>4</span></div>
     <div class="rbody">
       <b>拿去用</b>
@@ -178,6 +181,42 @@
 </div>
 </section>
 
+<!-- ═══════════ 数据图：80% 经不起推敲 ═══════════ -->
+<section>
+<h2>为什么"条数"是这个行业最不可信的指标</h2>
+<p class="sub">同一批原始数据，朴素方法与经过证据判定之后的差距。</p>
+
+<figure class="funnel">
+<svg viewBox="0 0 720 208" role="img"
+     aria-label="柱状图：朴素方法产出 63,155 条配对，经证据判定后仅剩 12,457 条，约 80% 被剔除">
+  <!-- 上：朴素方法的产出，占满整条 -->
+  <text class="fl" x="0" y="14">朴素方法"做"出的配对</text>
+  <rect x="0" y="26" width="720" height="46" rx="6" fill="var(--line)"/>
+  <text class="fv" x="12" y="55" fill="var(--ink)">63,155</text>
+  <text class="fn" x="92" y="55">条 · 用数据库自带的"靶点"字段直接配对</text>
+
+  <!-- 下：证据判定之后 -->
+  <text class="fl" x="0" y="106">只保留原文有明确声明的</text>
+  <rect x="0" y="118" width="142" height="46" rx="6" fill="var(--code)"/>
+  <rect x="150" y="118" width="570" height="46" rx="6"
+        fill="var(--warn-soft)" stroke="var(--warn)" stroke-dasharray="4 4"/>
+  <text class="fv" x="12" y="147" fill="#fff">12,457</text>
+  <text class="fv" x="162" y="147" fill="var(--warn)">−50,698</text>
+  <text class="fn" x="252" y="147" fill="var(--warn)">被剔除：关键词共现噪声、别名假阳性、无证据支撑</text>
+
+  <!-- 比例标注 -->
+  <line x1="0" y1="180" x2="142" y2="180" stroke="var(--code)" stroke-width="2"/>
+  <text class="fn" x="0" y="198" fill="var(--code)">经得起推敲 · 19.7%</text>
+  <line x1="150" y1="180" x2="720" y2="180" stroke="var(--warn)" stroke-width="2"/>
+  <text class="fn" x="150" y="198" fill="var(--warn)">经不起推敲 · 80.3%</text>
+</svg>
+<figcaption><b>八成的差距，就是这门生意的全部价值所在。</b>
+两边用的是同一批原始数据、同一批公开库——差别只在有没有做证据判定。<br>
+所以供应商报"我们有 X 万条"时，那个数字本身不包含任何信息量。
+<a href="/study/judgment/#ten-questions">S8 给你十个必问问题</a>。</figcaption>
+</figure>
+</section>
+
 <!-- ═══════════ 6. 课程里最值钱的一节 ═══════════ -->
 <section>
 <h2>先剧透最值钱的那一节</h2>
@@ -236,7 +275,7 @@ OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>�
 <!-- ═══════════ 8. 开始 ═══════════ -->
 <section>
 <h2>从这里开始</h2>
-<div class="grid">
+<div class="grid g3">
 <a class="cardlink" href="/study/" style="border-color:var(--bio);border-width:2px">
   <em>推荐 · 从头开始</em><b>进入两天速成营 →</b>
   <span>按阶段 1 → 4 走完，每节有当堂自测。</span></a>

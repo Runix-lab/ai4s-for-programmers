@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import argparse
 import filecmp
+import hashlib
 import html
 import json
 import re
@@ -36,6 +37,31 @@ sys.path.insert(0, str(CONTENT))
 import pages as P  # noqa: E402  (content/pages.py)
 
 ORIGIN = P.ORIGIN
+
+# Filled in by build(): logical asset name -> fingerprinted filename. Content
+# hashing is what makes the long cache on /assets/* safe. Without it a CSS fix
+# is invisible to anyone who loaded the page in the previous cache window --
+# which is exactly how a correct stylesheet got reported as a broken layout.
+ASSET_MAP: dict[str, str] = {}
+
+
+def asset(name: str) -> str:
+    return "/assets/" + ASSET_MAP.get(name, name)
+
+
+def fingerprint(out: Path) -> None:
+    """Rename hashable assets to name.<hash>.ext and record the mapping."""
+    ASSET_MAP.clear()
+    adir = out / "assets"
+    for name in ("style.css", "site.js", "quiz.js", "cert.js"):
+        src = adir / name
+        if not src.exists():
+            continue
+        digest = hashlib.sha256(src.read_bytes()).hexdigest()[:10]
+        stem, _, ext = name.rpartition(".")
+        new = f"{stem}.{digest}.{ext}"
+        src.rename(adir / new)
+        ASSET_MAP[name] = new
 
 
 # ---------------------------------------------------------------- helpers
@@ -229,7 +255,7 @@ def head_block(page: dict, index: dict) -> str:
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="alternate icon" href="/favicon.ico" sizes="64x64">
 <link rel="apple-touch-icon" href="/assets/favicon.png">
-<link rel="stylesheet" href="/assets/style.css">
+<link rel="stylesheet" href="{asset("style.css")}">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script type="application/ld+json">{json_ld(page, index)}</script>
 </head>
@@ -319,12 +345,13 @@ FOOTER = f"""<footer>
 def tail(page: dict) -> str:
     # quiz.js carries the whole 35-question bank, so it only ships to the pages
     # that actually render questions rather than riding along on every request.
-    extra = '\n<script src="/assets/quiz.js" defer></script>' if page.get("quiz") else ""
+    extra = (f'\n<script src="{asset("quiz.js")}" defer></script>'
+             if page.get("quiz") else "")
     # cert.js must be parsed before quiz.js runs its grading handler, since the
     # quiz calls into the unlock hook that cert.js installs.
     if page.get("cert"):
-        extra = '\n<script src="/assets/cert.js" defer></script>' + extra
-    return f"""<script src="/assets/site.js" defer></script>{extra}
+        extra = f'\n<script src="{asset("cert.js")}" defer></script>' + extra
+    return f"""<script src="{asset("site.js")}" defer></script>{extra}
 </body>
 </html>
 """
@@ -412,7 +439,7 @@ def write_sitemap(out: Path, index: dict) -> None:
         "  Permissions-Policy: geolocation=(), microphone=(), camera=()\n"
         "\n"
         "/assets/*\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
+        "  Cache-Control: public, max-age=31536000, immutable\n"
         "\n"
         "/*.html\n"
         "  Cache-Control: public, max-age=0, must-revalidate\n",
@@ -553,6 +580,10 @@ def build(out: Path, quiet: bool = False) -> list[str]:
         shutil.rmtree(out)
     out.mkdir(parents=True)
 
+    shutil.copytree(ASSETS, out / "assets", dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns("og-template.html"))
+    fingerprint(out)   # must run before any page is rendered
+
     index = {i: p for i, p in enumerate(P.PAGES)}
     for i, page in index.items():
         page.setdefault("crumb", page.get("h1", ""))
@@ -563,8 +594,6 @@ def build(out: Path, quiet: bool = False) -> list[str]:
         d.mkdir(parents=True, exist_ok=True)
         (d / "index.html").write_text(render(page, index), encoding="utf-8")
 
-    shutil.copytree(ASSETS, out / "assets", dirs_exist_ok=True,
-                    ignore=shutil.ignore_patterns("og-template.html"))
     # labs/ is deliberately NOT copied into the site: the lab sources live on
     # GitHub, and shipping the cached structure files would add ~11 MB of
     # payload that no page ever links to.
