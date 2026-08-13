@@ -1,9 +1,36 @@
-# AI4S for Programmers
+# AI4S for Programmers · 程序员的 AI for Science 入门（生物数据方向）
 
-**A free, two-day course that teaches AI for Science to programmers with zero biology background —
-by mapping every biological concept onto one you already know.**
+> **两天，零生物背景，学会读懂一份抗体／蛋白数据集，并在五分钟内判断它可不可信。**
+> AI for Science 里最难的部分不是科学，是数据工程——而那是程序员的主场。
 
-🔗 **[ai4s.runixcloud.io](https://ai4s.runixcloud.io)** · 中文授课 · [English overview](https://ai4s.runixcloud.io/en/)
+**🔗 [ai4s.runixcloud.io](https://ai4s.runixcloud.io)**　·　中文授课　·　[English overview](https://ai4s.runixcloud.io/en/)
+
+![content: CC BY-SA 4.0](https://img.shields.io/badge/content-CC%20BY--SA%204.0-1c6b58)
+![code: MIT](https://img.shields.io/badge/code-MIT-2e3f8c)
+![prerequisites: Python](https://img.shields.io/badge/前置-会写%20Python-697080)
+![biology: none](https://img.shields.io/badge/生物基础-零-a8382c)
+
+**关键词**：AI for Science 入门 · AI4S 教程 · 生物信息学 入门 · 抗体数据 · 蛋白数据清洗 ·
+生物数据工程 · 程序员转 AI 制药 · IMGT Kabat Chothia 区别 · 表位 互补位 · UniProt 归一化 ·
+交叉源验证 · AlphaFold 局限
+
+> ⚠️ **范围声明**：这门课只覆盖 AI for Science 的**生物数据方向**（抗体与蛋白质的数据采集、
+> 清洗、实体归一与质量验证）。材料、气候、天文等其它 AI4S 方向不在范围内，模型训练也不讲。
+> 一门讲「怎么识破夸大数据」的课，没有资格夸大自己的覆盖面。
+
+---
+
+## 两天学什么
+
+| 阶段 | 内容 | 时长 |
+|---|---|---|
+| **1 · 建立词汇表** | 蛋白质是字符串、抗体是 4 条链的对象、UniProt 登录号是主键 | 150 min |
+| **2 · 看懂真实数据** | FASTA / PDB / 三套编号体系；打开一条真实记录逐字段对照 | 150 min |
+| **3 · 建立判断力 ★** | 亲手把四个真实的 bug 跑出来：词边界假阳性、别名劫持、实算表位、断言式质检 | 210 min |
+| **4 · 拿去用** | 三维验收、十个必问问题、五分钟抽查法、红旗清单 | 60 min |
+
+学完做[结业考试](https://ai4s.runixcloud.io/study/exam/)，答对 16/20 可下载结业证明
+（浏览器本地生成，**不是第三方认证**）。
 
 ---
 
@@ -129,5 +156,13 @@ The sample dataset is derived from [RCSB PDB](https://www.rcsb.org/), which plac
 data in the public domain (CC0). Check the terms of any other database before reusing
 its data — that is [question 10](https://ai4s.runixcloud.io/study/judgment/#ten-questions)
 of the course, and it applies to us too.
+
+## 社交预览图
+
+`docs/social-preview.png`（1280×640）可在 GitHub 仓库
+**Settings → General → Social preview → Upload an image** 上传，
+决定这个仓库被分享到任何地方时的卡片长什么样。
+
+---
 
 Built by [Runix](https://runixcloud.io).
