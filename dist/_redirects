@@ -1,8 +1,22 @@
-# legacy / convenience paths
-/course/s1  /course/protein-as-string/  301
-/course/s2  /course/binding-and-affinity/  301
-/course/s3  /course/formats-and-ids/  301
-/course/s5  /course/what-ai-does/  301
-/course/s6  /course/data-engineering/  301
-/course/s7  /course/falsification/  301
-/course/s8  /course/judgment/  301
+# course moved under /study/ (2026-08-13)
+/course/protein-as-string/*   /study/protein-as-string/   301
+/course/binding-and-affinity/* /study/binding-and-affinity/ 301
+/course/formats-and-ids/*     /study/formats-and-ids/     301
+/course/hands-on-day1/*       /study/hands-on-day1/       301
+/course/what-ai-does/*        /study/what-ai-does/        301
+/course/data-engineering/*    /study/data-engineering/    301
+/course/falsification/*       /study/falsification/       301
+/course/judgment/*            /study/judgment/            301
+/course/*                     /study/syllabus/            301
+/labs/*                       /study/labs/                301
+/quiz/*                       /study/quiz/                301
+/glossary/*                   /study/glossary/            301
+/resources/*                  /study/resources/           301
+
+# short aliases
+/s1  /study/protein-as-string/   301
+/s2  /study/binding-and-affinity/ 301
+/s3  /study/formats-and-ids/     301
+/s7  /study/falsification/       301
+/s8  /study/judgment/            301
+/course  /study/syllabus/        301

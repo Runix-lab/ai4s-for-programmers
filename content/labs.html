@@ -25,10 +25,10 @@ HGNC 和 UniProt 的公开 API，<a href="#lab6">Lab 6</a> 会真的去访问溯
 <div class="lab">
 <h2 id="lab1">LAB 1 · 打开一条真实记录</h2>
 <pre>$ python labs/lab1_read_one_record.py</pre>
-<p>打印一条抗体记录的所有字段，让你把 <a href="/course/protein-as-string/">S1</a>–<a href="/course/formats-and-ids/">S3</a>
+<p>打印一条抗体记录的所有字段，让你把 <a href="/study/protein-as-string/">S1</a>–<a href="/study/formats-and-ids/">S3</a>
 的每个概念在真实数据里逐个找到。</p>
 <p class="meta" style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
-<a href="/course/hands-on-day1/#lab1">S4</a></p>
+<a href="/study/hands-on-day1/#lab1">S4</a></p>
 </div>
 
 <div class="lab">
@@ -37,7 +37,7 @@ HGNC 和 UniProt 的公开 API，<a href="#lab6">Lab 6</a> 会真的去访问溯
 <p><code>SELECT COUNT(*) ... GROUP BY</code> 的生物版：总量、外键基数、
 证据等级分布、字段填充率、QC 标记分布。<b>拿到任何陌生数据的第一件事。</b></p>
 <p style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
-<a href="/course/hands-on-day1/#lab2">S4</a></p>
+<a href="/study/hands-on-day1/#lab2">S4</a></p>
 </div>
 
 <div class="lab">
@@ -46,7 +46,7 @@ HGNC 和 UniProt 的公开 API，<a href="#lab6">Lab 6</a> 会真的去访问溯
 <p>三类 bug 现场发生：词边界缺失导致的假阳性、
 前缀关系导致的误判（<b>加词边界也救不了</b>）、以及正则根本解决不了的语义陷阱。</p>
 <p style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
-<a href="/course/falsification/#lab3">S7</a></p>
+<a href="/study/falsification/#lab3">S7</a></p>
 </div>
 
 <div class="lab" style="border-width:2px">
@@ -61,7 +61,7 @@ HER2   ERBB2     <u>GTF1 P53260 [Saccharomyces]</u>     ERBB2 P04626     <i>← 
 PD-1   PDCD1     PD-1 Q9UMF3 [Homo sapiens]        (查不到)
 OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>← 兔子同源</i></pre>
 <p style="color:var(--mut);font-size:13px"><b>需要联网</b> · 约 1 分钟 · 配套
-<a href="/course/falsification/#lab4">S7</a></p>
+<a href="/study/falsification/#lab4">S7</a></p>
 </div>
 
 <div class="lab">
@@ -70,7 +70,7 @@ OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>�
 <p>把两侧原子丢进 KD 树做空间近邻查询，算出表位和互补位残基。
 输出里的 <code>SEP</code>／<code>TPO</code> 会顺带告诉你这个抗体识别的是<b>磷酸化状态</b>的目标。</p>
 <p style="color:var(--mut);font-size:13px">离线可跑（结构文件已内置）· 约 1 分钟 · 配套
-<a href="/course/falsification/#lab5">S7</a></p>
+<a href="/study/falsification/#lab5">S7</a></p>
 </div>
 
 <div class="lab">
@@ -79,7 +79,7 @@ OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>�
 <p>把数据质量写成一组必须成立的断言。<b>里面埋了一个陷阱</b>——
 关于 HTTP 403 该不该判定为「链接坏了」。自己跑出来体会。</p>
 <p style="color:var(--mut);font-size:13px"><b>需要联网</b> · 约 2 分钟 · 配套
-<a href="/course/falsification/#lab6">S7</a></p>
+<a href="/study/falsification/#lab6">S7</a></p>
 </div>
 </section>
 
@@ -98,7 +98,7 @@ CDR 用 ANARCI/abnumber 本地算，表位用 gemmi 现场算。
 1 条含氨基酸模糊码——<b>全部保留并在 QC_flags 里如实标记</b>。
 一份被洗得完美无瑕的教学数据，会让你学到一套在真实世界里不成立的直觉。</li>
 <li><b>它自己就验证了课程里的两个论断</b>：29/29 行的 Kabat 与 Chothia CDRH3 完全相同，
-16/29 行的抗原链不是 A。<b>不用信我，跑 <a href="/labs/#lab2">Lab 2</a> 自己数。</b></li>
+16/29 行的抗原链不是 A。<b>不用信我，跑 <a href="/study/labs/#lab2">Lab 2</a> 自己数。</b></li>
 </ul>
 <div class="key"><b>如果你想在更大的数据上练</b>
 <p>公开可获取的起点：<a href="https://opig.stats.ox.ac.uk/webapps/sabdab-sabdab/" rel="noopener">SAbDab</a>
@@ -106,7 +106,7 @@ CDR 用 ANARCI/abnumber 本地算，表位用 gemmi 现场算。
 <a href="https://www.uniprot.org/" rel="noopener">UniProt</a>（蛋白序列与注释）、
 <a href="https://www.iedb.org/" rel="noopener">IEDB</a>（表位）。<br>
 <b>用之前先看各自的使用条款</b>——这正是
-<a href="/course/judgment/#ten-questions">S8 第 10 问</a>要你问别人的那件事，
+<a href="/study/judgment/#ten-questions">S8 第 10 问</a>要你问别人的那件事，
 对自己也一样适用。</p></div>
 </div>
 </section>

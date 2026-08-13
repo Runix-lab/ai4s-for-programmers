@@ -127,7 +127,7 @@ keeps that honest — edit a source file without rebuilding and the build fails.
 
 The sample dataset is derived from [RCSB PDB](https://www.rcsb.org/), which places its
 data in the public domain (CC0). Check the terms of any other database before reusing
-its data — that is [question 10](https://ai4s.runixcloud.io/course/judgment/#ten-questions)
+its data — that is [question 10](https://ai4s.runixcloud.io/study/judgment/#ten-questions)
 of the course, and it applies to us too.
 
 Built by [Runix](https://runixcloud.io).

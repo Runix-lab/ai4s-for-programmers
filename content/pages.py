@@ -27,11 +27,12 @@ TEACHES = [
 ]
 
 NAV = [
-    ("course", "课程"),
-    ("labs", "实验"),
-    ("quiz", "检验"),
-    ("glossary", "术语表"),
-    ("resources", "资源"),
+    ("study", "速成营"),
+    ("study/syllabus", "大纲"),
+    ("study/labs", "实验"),
+    ("study/quiz", "检验"),
+    ("study/glossary", "术语表"),
+    ("study/resources", "资源"),
     ("en", "EN"),
 ]
 
@@ -39,9 +40,9 @@ NAV = [
 def _lesson(slug, file, crumb, h1, title, desc, keywords, duration, teaches,
             eyebrow, dek, prev, nxt, og="lesson", og_headline=None, faq=None):
     return dict(
-        slug=f"course/{slug}", file=file, crumb=crumb, h1=h1, title=title, desc=desc,
+        slug=f"study/{slug}", file=file, crumb=crumb, h1=h1, title=title, desc=desc,
         keywords=keywords, duration=duration, teaches=teaches, eyebrow=eyebrow, dek=dek,
-        parent=1, prev=prev, next=nxt, schema="Lesson", priority=0.8, quiz=True,
+        parent=1, prev=prev, next=nxt, schema="Lesson", priority=0.85, quiz=True,
         og=og, og_headline=og_headline or crumb, og_kicker="AI4S for Programmers",
         faq=faq,
     )
@@ -50,7 +51,7 @@ def _lesson(slug, file, crumb, h1, title, desc, keywords, duration, teaches,
 PAGES = [
     # ---------------------------------------------------------------- 0 home
     dict(
-        slug="", file="home", crumb="首页",
+        slug="study", file="home", crumb="两天速成营",
         h1="程序员两天学会看懂<br>AI for Science 的数据",
         title="AI4S for Programmers · 程序员的 AI for Science 入门",
         desc="零生物背景的程序员两天入门 AI for Science：所有生物概念映射到你已经懂的编程概念，配 6 个可运行实验和 35 道检验题。免费开源。",
@@ -86,7 +87,7 @@ PAGES = [
 
     # ---------------------------------------------------------------- 1 course
     dict(
-        slug="course", file="course", crumb="课程总览",
+        slug="study/syllabus", file="course", crumb="课程总览",
         h1="课程总览：两天 8 节课",
         title="课程总览 · 抗体数据与 AI4S 两天速成营",
         desc="两天 8 节课的完整大纲：Day 1 从零到看懂数据，Day 2 从数据到判断力。含每节的时长、目标、配套实验与检验题，以及时间不够时的精简路径。",
@@ -276,7 +277,7 @@ PAGES = [
 
     # ---------------------------------------------------------------- 10 labs
     dict(
-        slug="labs", file="labs", crumb="动手实验",
+        slug="study/labs", file="labs", crumb="动手实验",
         h1="6 个动手实验",
         title="6 个可运行实验 · 亲手复现真实数据 bug",
         desc="六个 Python 实验：读一条真实抗体记录、数据体检、复现子串匹配假阳性、交叉源验证、从三维结构算表位、断言式质检。附完整源码。",
@@ -291,7 +292,7 @@ PAGES = [
 
     # ---------------------------------------------------------------- 11 quiz
     dict(
-        slug="quiz", file="quiz", crumb="在线检验",
+        slug="study/quiz", file="quiz", crumb="在线检验",
         h1="35 道检验题",
         title="35 道在线检验题 · 抗体数据与 AI4S",
         desc="Day 1 检验 15 题 + 结业考试 20 题，全部选择题、即时判分、每题都附解析说明为什么。用来确认你真的掌握了，而不只是读过了——做错的题回对应小节重看一遍。",
@@ -304,7 +305,7 @@ PAGES = [
 
     # ---------------------------------------------------------------- 12 glossary
     dict(
-        slug="glossary", file="glossary", crumb="术语表",
+        slug="study/glossary", file="glossary", crumb="术语表",
         h1="术语表：生物词 → 编程词",
         title="生物术语对照表 · 给程序员的速查",
         desc="45 个高频术语的双向速查：每个生物概念配一句人话解释和一个编程类比。抗体、表位、KD、CDR、IMGT、UniProt、FASTA、PDB 全覆盖。",
@@ -320,7 +321,7 @@ PAGES = [
 
     # ---------------------------------------------------------------- 13 resources
     dict(
-        slug="resources", file="resources", crumb="视频与资源",
+        slug="study/resources", file="resources", crumb="视频与资源",
         h1="视频与资源清单",
         title="AI4S 入门视频与资料清单 · 逐条实测",
         desc="精选视频教程与 UniProt / HGNC / RCSB PDB / SAbDab 等权威数据库入口，中英文都有，标题时长逐条核对。按「只看一条该看哪条」排序，不贪多、不堆量。",
@@ -364,6 +365,37 @@ PAGES = [
              "prerequisite."),
         ],
     ),
+    # ------------------------------------------------- 15 site root (AI4S line)
+    dict(
+        slug="", file="ai4s", crumb="首页",
+        h1="AI for Science，<br>讲给程序员听",
+        title="AI4S · AI for Science 给程序员的入门",
+        desc="AI for Science 里最难的部分不是科学，是数据工程——而那正是程序员已经会的事。免费开源的两天速成营，零生物背景可学，配 6 个可运行实验。",
+        keywords=["AI for Science", "AI4S", "AI4S 是什么", "AI for Science 入门",
+                  "程序员 AI 制药", "科学数据 工程", "AI4S 教程"],
+        eyebrow="RUNIX · AI FOR SCIENCE",
+        dek="这个领域最稀缺的不是模型能力，是<b>判断一份科学数据是真是假的能力</b>。"
+            "而做这件事需要的技能，你在软件工程里已经练了很多年。",
+        badges=["<b>免费</b> · 开源", "无需生物背景", "<b>6 个</b>可运行实验",
+                "内容 <b>CC BY-SA</b> · 代码 <b>MIT</b>"],
+        parent=None, prev=None, next=0, schema="Course", priority=1.0,
+        changefreq="weekly", og="default", og_type="website",
+        og_headline="AI for Science，讲给程序员听",
+        og_kicker="Runix · 免费开源",
+        faq=[
+            ("AI4S 和普通的机器学习有什么区别？",
+             "方法上没有本质区别，数据条件上有天壤之别。通用 AI 的数据近乎无限、标注便宜；"
+             "AI4S 的每条数据都来自真实实验，成本极高、总量极小，而且经常带有不容易发现的"
+             "系统性错误。所以在 AI4S 里，数据的收集、归一和验证通常比模型架构更决定成败。"),
+            ("没有科学背景能进入 AI for Science 领域吗？",
+             "能。这个领域最缺的岗位之一是数据工程——把多个来源的科学数据接进来、归一到稳定主键、"
+             "给每条记录标明证据强度、写质检断言。这些工作的核心技能是软件工程，不是实验科学。"),
+            ("从哪里开始学 AI for Science？",
+             "从判断力开始，而不是从建模开始。先能读懂一份科学数据集的每一列、"
+             "能判断它是否可信，再谈模型。本站的两天速成营就是按这个前提设计的，"
+             "全部免费开源，零生物背景可学。"),
+        ],
+    ),
 ]
 
 NOT_FOUND = dict(
@@ -371,6 +403,6 @@ NOT_FOUND = dict(
     title="页面不存在 · AI4S for Programmers",
     desc="你访问的页面不存在或已经移动。可以从课程总览重新开始，或者用术语表直接查一个词。",
     parent=None, prev=None, next=None, noindex=True, og="default",
-    dek="链接可能过期了。从<a href=\"/course/\">课程总览</a>重新开始，"
-        "或者直接去<a href=\"/glossary/\">术语表</a>查词。",
+    dek="链接可能过期了。从<a href=\"/study/\">两天速成营</a>重新开始，"
+        "或者直接去<a href=\"/study/glossary/\">术语表</a>查词。",
 )

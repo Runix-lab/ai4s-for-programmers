@@ -6,9 +6,9 @@
 <title>交叉源验证：为什么自证等于循环论证</title>
 <meta name="description" content="全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。">
 <meta name="keywords" content="交叉源验证, 数据 证伪, 断言式 质检, 表位 计算, 假阳性 词边界, 数据质量 验证">
-<link rel="canonical" href="https://ai4s.runixcloud.io/course/falsification/">
-<link rel="prev" href="https://ai4s.runixcloud.io/course/data-engineering/">
-<link rel="next" href="https://ai4s.runixcloud.io/course/judgment/">
+<link rel="canonical" href="https://ai4s.runixcloud.io/study/falsification/">
+<link rel="prev" href="https://ai4s.runixcloud.io/study/data-engineering/">
+<link rel="next" href="https://ai4s.runixcloud.io/study/judgment/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <meta name="author" content="Runix">
 <meta property="og:type" content="article">
@@ -16,7 +16,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:title" content="交叉源验证：为什么自证等于循环论证">
 <meta property="og:description" content="全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。">
-<meta property="og:url" content="https://ai4s.runixcloud.io/course/falsification/">
+<meta property="og:url" content="https://ai4s.runixcloud.io/study/falsification/">
 <meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/falsify.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,14 +29,14 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S7 · 质量与证伪","item":"https://ai4s.runixcloud.io/course/falsification/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/falsification/#lesson","name":"质量与证伪：亲手复现那些坑","description":"全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。","url":"https://ai4s.runixcloud.io/course/falsification/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT90M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["交叉源验证方法","子串匹配假阳性的成因","从三维结构计算表位","断言式数据质检"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"什么是交叉源验证？","acceptedAnswer":{"@type":"Answer","text":"用一个独立的权威数据源去复核另一个源产出的结果，两边一致才算通过。关键在于「独立」：如果用产出结果的同一个源去检查结果，那是循环论证，等同于写测试时用被测代码自己的逻辑去断言。"}},{"@type":"Question","name":"为什么数据全部通过质检反而可疑？","acceptedAnswer":{"@type":"Answer","text":"真实数据一定有已知瑕疵——测序模糊码、部分序列、来源缺失。一份 QC 标记全是 OK 的数据集，更可能说明质检做得不够细，而不是数据完美。拿不出缺陷清单的供应商值得警惕。"}}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/study/syllabus/"},{"@type":"ListItem","position":3,"name":"S7 · 质量与证伪","item":"https://ai4s.runixcloud.io/study/falsification/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/study/falsification/#lesson","name":"质量与证伪：亲手复现那些坑","description":"全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。","url":"https://ai4s.runixcloud.io/study/falsification/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT90M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["交叉源验证方法","子串匹配假阳性的成因","从三维结构计算表位","断言式数据质检"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"什么是交叉源验证？","acceptedAnswer":{"@type":"Answer","text":"用一个独立的权威数据源去复核另一个源产出的结果，两边一致才算通过。关键在于「独立」：如果用产出结果的同一个源去检查结果，那是循环论证，等同于写测试时用被测代码自己的逻辑去断言。"}},{"@type":"Question","name":"为什么数据全部通过质检反而可疑？","acceptedAnswer":{"@type":"Answer","text":"真实数据一定有已知瑕疵——测序模糊码、部分序列、来源缺失。一份 QC 标记全是 OK 的数据集，更可能说明质检做得不够细，而不是数据完美。拿不出缺陷清单的供应商值得警惕。"}}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">跳到正文</a>
 <div id="bar"></div>
-<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/study/" class="on">速成营</a><a href="/study/syllabus/">大纲</a><a href="/study/labs/">实验</a><a href="/study/quiz/">检验</a><a href="/study/glossary/">术语表</a><a href="/study/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
 <div class="wrap">
-<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S7 · 质量与证伪</span></nav>
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/study/syllabus/">课程总览</a><i aria-hidden="true">/</i><span>S7 · 质量与证伪</span></nav>
 <main id="main">
 <header><p class="eyebrow">DAY 2 · S7 · 下午 90 分钟</p><h1>质量与证伪：亲手复现那些坑</h1><p class="dek">这一节是全课的核心。四个实验，<b>每个都让你亲手把 bug 跑出来</b>。</p></header>
 <p>前面六节都是为这一节做准备。<b>判断力不来自知识，来自亲手见过错误发生。</b>
@@ -133,12 +133,12 @@ OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>�
 <b>② 残基编号也要说明基准。</b>下面那串 <code>S202…R209</code>
 是按 <b>tau 的 2N4R 亚型（441 aa）</b>编号的。
 换一个亚型，同一个残基的编号就变了——
-这和 <a href="/course/data-engineering/#five-traps">S6 第 ⑤ 个坑</a>（跨毒株编号失效）是<b>同一个问题</b>。
+这和 <a href="/study/data-engineering/#five-traps">S6 第 ⑤ 个坑</a>（跨毒株编号失效）是<b>同一个问题</b>。
 <b>这门课自己教了坐标基准这一课，第一版却没给自己的例子标基准。</b><br><br>
 <b>③ 残基名会告诉你额外信息。</b><code>SEP</code>／<code>TPO</code>
 是磷酸化修饰过的丝氨酸／苏氨酸，说明这个抗体识别的是<b>磷酸化状态的</b>目标蛋白，
 而不是它本身。这个信息只在三维结构里有，序列里没有。</p></div>
-<div class="trap"><b>顺带记住 <a href="/course/formats-and-ids/#pdb">S3 那个坑</a>：</b>
+<div class="trap"><b>顺带记住 <a href="/study/formats-and-ids/#pdb">S3 那个坑</a>：</b>
 这个例子里抗原链是 <code>P</code> 不是 <code>A</code>。
 PDB 的链 ID 由沉积者自定、没有语义，<b>写死链名是这一步最常见的 bug</b>。</div>
 </div>
@@ -181,16 +181,16 @@ PDB 的链 ID 由沉积者自定、没有语义，<b>写死链名是这一步最
 <p class="sub">六道题。这一节的题最值得认真做。</p>
 <div class="quiz" data-bank="d2" data-sec="s7"><h3>S7 · 质量与证伪</h3></div>
 </section>
-<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/data-engineering/" rel="prev"><small>上一节</small>S6 · 数据工程</a><a class="n" href="/course/judgment/" rel="next"><small>下一节</small>S8 · 判定与商业</a></nav>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/study/data-engineering/" rel="prev"><small>上一节</small>S6 · 数据工程</a><a class="n" href="/study/judgment/" rel="next"><small>下一节</small>S8 · 判定与商业</a></nav>
 </main>
 <footer>
 <div class="fcol"><b>AI4S for Programmers</b>
 <p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
 每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
 <div class="fcol"><b>课程</b>
-<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<a href="/study/">两天速成营</a><a href="/study/syllabus/">课程大纲</a><a href="/study/labs/">动手实验</a><a href="/study/quiz/">在线检验</a></div>
 <div class="fcol"><b>资源</b>
-<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="/study/glossary/">术语表</a><a href="/study/resources/">视频与资料</a><a href="/en/">English</a>
 <a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
 <div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
 <span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>

@@ -288,9 +288,9 @@ FOOTER = f"""<footer>
 <p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
 每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
 <div class="fcol"><b>课程</b>
-<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<a href="/study/">两天速成营</a><a href="/study/syllabus/">课程大纲</a><a href="/study/labs/">动手实验</a><a href="/study/quiz/">在线检验</a></div>
 <div class="fcol"><b>资源</b>
-<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="/study/glossary/">术语表</a><a href="/study/resources/">视频与资料</a><a href="/en/">English</a>
 <a href="{P.REPO}" rel="noopener">GitHub 源码</a><a href="{P.ORG_URL}" rel="noopener">{esc(P.ORG)}</a></div>
 <div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 {P.UPDATED}</span>
 <span>发现错误？<a href="{P.REPO}/issues" rel="noopener">提个 issue</a></span></div>
@@ -395,15 +395,31 @@ def write_sitemap(out: Path, index: dict) -> None:
         encoding="utf-8",
     )
 
+    # The course lived at the site root before it moved under /study/. These
+    # keep any link made in between from 404-ing, and tell search engines the
+    # move was permanent rather than letting both URLs compete.
     (out / "_redirects").write_text(
-        "# legacy / convenience paths\n"
-        "/course/s1  /course/protein-as-string/  301\n"
-        "/course/s2  /course/binding-and-affinity/  301\n"
-        "/course/s3  /course/formats-and-ids/  301\n"
-        "/course/s5  /course/what-ai-does/  301\n"
-        "/course/s6  /course/data-engineering/  301\n"
-        "/course/s7  /course/falsification/  301\n"
-        "/course/s8  /course/judgment/  301\n",
+        "# course moved under /study/ (2026-08-13)\n"
+        "/course/protein-as-string/*   /study/protein-as-string/   301\n"
+        "/course/binding-and-affinity/* /study/binding-and-affinity/ 301\n"
+        "/course/formats-and-ids/*     /study/formats-and-ids/     301\n"
+        "/course/hands-on-day1/*       /study/hands-on-day1/       301\n"
+        "/course/what-ai-does/*        /study/what-ai-does/        301\n"
+        "/course/data-engineering/*    /study/data-engineering/    301\n"
+        "/course/falsification/*       /study/falsification/       301\n"
+        "/course/judgment/*            /study/judgment/            301\n"
+        "/course/*                     /study/syllabus/            301\n"
+        "/labs/*                       /study/labs/                301\n"
+        "/quiz/*                       /study/quiz/                301\n"
+        "/glossary/*                   /study/glossary/            301\n"
+        "/resources/*                  /study/resources/           301\n"
+        "\n# short aliases\n"
+        "/s1  /study/protein-as-string/   301\n"
+        "/s2  /study/binding-and-affinity/ 301\n"
+        "/s3  /study/formats-and-ids/     301\n"
+        "/s7  /study/falsification/       301\n"
+        "/s8  /study/judgment/            301\n"
+        "/course  /study/syllabus/        301\n",
         encoding="utf-8",
     )
 

@@ -6,9 +6,9 @@
 <title>动手实验：打开一条真实抗体记录并做数据体检</title>
 <meta name="description" content="Day 1 的两个实验：打开一条真实抗体记录逐字段对照概念，然后用 SELECT COUNT(*) GROUP BY 的思路给整份数据做一次体检。">
 <meta name="keywords" content="抗体 数据集 字段, 生物数据 体检, 数据质量 检查">
-<link rel="canonical" href="https://ai4s.runixcloud.io/course/hands-on-day1/">
-<link rel="prev" href="https://ai4s.runixcloud.io/course/formats-and-ids/">
-<link rel="next" href="https://ai4s.runixcloud.io/course/what-ai-does/">
+<link rel="canonical" href="https://ai4s.runixcloud.io/study/hands-on-day1/">
+<link rel="prev" href="https://ai4s.runixcloud.io/study/formats-and-ids/">
+<link rel="next" href="https://ai4s.runixcloud.io/study/what-ai-does/">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 <meta name="author" content="Runix">
 <meta property="og:type" content="article">
@@ -16,7 +16,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:title" content="动手实验：打开一条真实抗体记录并做数据体检">
 <meta property="og:description" content="Day 1 的两个实验：打开一条真实抗体记录逐字段对照概念，然后用 SELECT COUNT(*) GROUP BY 的思路给整份数据做一次体检。">
-<meta property="og:url" content="https://ai4s.runixcloud.io/course/hands-on-day1/">
+<meta property="og:url" content="https://ai4s.runixcloud.io/study/hands-on-day1/">
 <meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/lesson.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -29,14 +29,14 @@
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S4 · 动手（Day 1）","item":"https://ai4s.runixcloud.io/course/hands-on-day1/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/hands-on-day1/#lesson","name":"动手：把今天学的跑一遍","description":"Day 1 的两个实验：打开一条真实抗体记录逐字段对照概念，然后用 SELECT COUNT(*) GROUP BY 的思路给整份数据做一次体检。","url":"https://ai4s.runixcloud.io/course/hands-on-day1/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT60M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["读取真实抗体数据记录","数据集的基数与填充率体检"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/study/syllabus/"},{"@type":"ListItem","position":3,"name":"S4 · 动手（Day 1）","item":"https://ai4s.runixcloud.io/study/hands-on-day1/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/study/hands-on-day1/#lesson","name":"动手：把今天学的跑一遍","description":"Day 1 的两个实验：打开一条真实抗体记录逐字段对照概念，然后用 SELECT COUNT(*) GROUP BY 的思路给整份数据做一次体检。","url":"https://ai4s.runixcloud.io/study/hands-on-day1/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT60M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["读取真实抗体数据记录","数据集的基数与填充率体检"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">跳到正文</a>
 <div id="bar"></div>
-<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/study/" class="on">速成营</a><a href="/study/syllabus/">大纲</a><a href="/study/labs/">实验</a><a href="/study/quiz/">检验</a><a href="/study/glossary/">术语表</a><a href="/study/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
 <div class="wrap">
-<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S4 · 动手（Day 1）</span></nav>
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/study/syllabus/">课程总览</a><i aria-hidden="true">/</i><span>S4 · 动手（Day 1）</span></nav>
 <main id="main">
 <header><p class="eyebrow">DAY 1 · S4 · 下午 60 分钟</p><h1>动手：把今天学的跑一遍</h1><p class="dek">所有实验都在<b>真实数据</b>上跑，不是玩具样例。</p></header>
 <p>今天学的三节全是概念。这一节把它们落到真实数据上——
@@ -50,8 +50,8 @@ PDB 号与链标识、表位残基、溯源链接。</p>
 <p><b>你要做的事：对照 S1–S3 的每个概念，逐个在输出里找到它。</b>
 找不到的概念就回去重看那一段。</p>
 <p style="color:var(--mut);font-size:13.5px">重点看这三处：<br>
-① <code>IMGT / Kabat / Chothia</code> 三行 —— 同一条序列，三套编号切出的 CDR 完全不同（<a href="/course/formats-and-ids/#numbering">S3.2</a>）<br>
-② <code>VH_sequence</code> vs <code>VH_full_chain</code> —— 切掉恒定区前后的差别（<a href="/course/protein-as-string/#u1-3">S1.3</a>）<br>
+① <code>IMGT / Kabat / Chothia</code> 三行 —— 同一条序列，三套编号切出的 CDR 完全不同（<a href="/study/formats-and-ids/#numbering">S3.2</a>）<br>
+② <code>VH_sequence</code> vs <code>VH_full_chain</code> —— 切掉恒定区前后的差别（<a href="/study/protein-as-string/#u1-3">S1.3</a>）<br>
 ③ <code>Epitope</code> 那一列 —— 一串残基编号，Day 2 你会亲手把它算出来</p>
 </div>
 
@@ -89,16 +89,16 @@ PDB 号与链标识、表位残基、溯源链接。</p>
 <p class="sub">15 题，覆盖 S1–S3。12 题以上可以进 Day 2；不到 10 题建议回头重看。</p>
 <div class="quiz" data-bank="d1"><h3>DAY 1 · 共 15 题</h3></div>
 </section>
-<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/formats-and-ids/" rel="prev"><small>上一节</small>S3 · 格式与标识符</a><a class="n" href="/course/what-ai-does/" rel="next"><small>下一节</small>S5 · AI 在做什么</a></nav>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/study/formats-and-ids/" rel="prev"><small>上一节</small>S3 · 格式与标识符</a><a class="n" href="/study/what-ai-does/" rel="next"><small>下一节</small>S5 · AI 在做什么</a></nav>
 </main>
 <footer>
 <div class="fcol"><b>AI4S for Programmers</b>
 <p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
 每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
 <div class="fcol"><b>课程</b>
-<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<a href="/study/">两天速成营</a><a href="/study/syllabus/">课程大纲</a><a href="/study/labs/">动手实验</a><a href="/study/quiz/">在线检验</a></div>
 <div class="fcol"><b>资源</b>
-<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="/study/glossary/">术语表</a><a href="/study/resources/">视频与资料</a><a href="/en/">English</a>
 <a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
 <div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
 <span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
