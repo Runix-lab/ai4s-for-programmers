@@ -105,6 +105,10 @@ if [ "$fail" != "0" ]; then
   exit 1
 fi
 
+# Bing and Yandex take a push with no account; Google is deliberately not called
+# because it does not accept one — it reads the sitemap directive in robots.txt.
+echo "==> Notify IndexNow"
+python3 "$SRC/scripts/indexnow.py" || echo "    (non-fatal: indexing continues via crawl)"
+
 echo
 echo "Live: $DOMAIN"
-echo "Next: submit $DOMAIN/sitemap.xml in Google Search Console and Bing Webmaster Tools."

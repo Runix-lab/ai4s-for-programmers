@@ -414,6 +414,13 @@ def write_sitemap(out: Path, index: dict) -> None:
         encoding="utf-8",
     )
 
+    # IndexNow: Bing and Yandex accept a push of changed URLs with no account and
+    # no ownership verification -- the key file served from the site root is the
+    # proof. Google does not participate, but it does not need to: it finds the
+    # sitemap through the directive in robots.txt.
+    INDEXNOW_KEY = "b86af4864246a2dcad2b67cb1cdca04c"
+    (out / f"{INDEXNOW_KEY}.txt").write_text(INDEXNOW_KEY, encoding="utf-8")
+
     (out / "robots.txt").write_text(
         "# https://www.robotstxt.org/robotstxt.html\n"
         "User-agent: *\n"
