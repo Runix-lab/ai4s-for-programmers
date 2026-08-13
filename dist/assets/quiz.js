@@ -151,6 +151,21 @@
       var s = document.getElementById(ns + 'score');
       s.className = 'ans show';
       s.innerHTML = '<b>得分：' + right + ' / ' + items.length + '</b>　' + msg;
+
+      // A quiz marked data-cert gates the completion certificate. The threshold
+      // lives on the certificate host so the page states it and the code reads
+      // the same number the reader was shown.
+      if (box.hasAttribute('data-cert')) {
+        var certHost = document.getElementById('cert');
+        var pass = certHost ? (certHost.__pass || 16) : 16;
+        if (right >= pass && window.__ai4sUnlockCert) {
+          window.__ai4sUnlockCert(right);
+          s.innerHTML += '<br><b style="color:var(--code)">✓ 达标，结业证明已解锁（见下方）。</b>';
+          return;
+        }
+        s.innerHTML += '<br>还差 ' + Math.max(0, pass - right) +
+          ' 题达标（' + pass + '/' + items.length + '）。错的题回对应小节重看一遍再来。';
+      }
       s.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
   });

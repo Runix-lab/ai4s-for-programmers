@@ -245,11 +245,28 @@ def nav_block(page: dict) -> str:
     for slug, label in P.NAV:
         cls = ' class="on"' if slug == here or (slug and here.startswith(slug + "/")) else ""
         items.append(f'<a href="{href(slug)}"{cls}>{esc(label)}</a>')
+    # The mark is the course's own argument in miniature: one half indigo for
+    # the biology side, one half green for the code side. Inlined rather than
+    # linked so it paints with the first byte and matches the favicon exactly.
+    logo = (
+        # width/height are intrinsic on purpose: without them a stylesheet that
+        # is slow or blocked leaves the mark filling the viewport. Same reason
+        # the fills carry a literal fallback before the custom property.
+        '<svg class="mark" viewBox="0 0 64 64" width="22" height="22" '
+        'aria-hidden="true" focusable="false">'
+        '<rect width="64" height="64" rx="14" fill="#2e3f8c" style="fill:var(--bio,#2e3f8c)"/>'
+        '<path d="M32 0h18a14 14 0 0 1 14 14v36a14 14 0 0 1-14 14H32z" '
+        'fill="#1c6b58" style="fill:var(--code,#1c6b58)"/>'
+        '<path d="M20 44 L26 20 L32 44 M22.5 36 h7" stroke="#fff" stroke-width="3.6" '
+        'fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<path d="M44 22 v20" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>'
+        "</svg>"
+    )
     return (
         '<a class="skip" href="#main">跳到正文</a>\n'
         '<div id="bar"></div>\n'
         '<nav aria-label="主导航"><div class="in">'
-        f'<a class="brand" href="/">AI4S<span>/dev</span></a>{"".join(items)}'
+        f'<a class="brand" href="/">{logo}<b>AI4S</b><i>生物数据方向</i></a>{"".join(items)}'
         '<button id="theme" type="button" aria-label="切换深浅色">◐</button>'
         "</div></nav>"
     )
@@ -287,10 +304,11 @@ def pager_block(page: dict, index: dict) -> str:
 
 FOOTER = f"""<footer>
 <div class="fcol"><b>{esc(P.SITE_NAME)}</b>
-<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
-每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<p>AI for Science 的<b>生物数据方向</b>：抗体与蛋白数据的采集、清洗与质量验证。
+所有生物概念都映射到你已经懂的编程概念，每个知识点都配一个能跑的实验。<br>
+内容免费，源码开放。</p></div>
 <div class="fcol"><b>课程</b>
-<a href="/study/">两天速成营</a><a href="/study/syllabus/">课程大纲</a><a href="/study/labs/">动手实验</a><a href="/study/quiz/">在线检验</a></div>
+<a href="/study/">两天速成营</a><a href="/study/syllabus/">课程大纲</a><a href="/study/labs/">动手实验</a><a href="/study/quiz/">在线检验</a><a href="/study/exam/">结业考试</a></div>
 <div class="fcol"><b>资源</b>
 <a href="/study/glossary/">术语表</a><a href="/study/resources/">视频与资料</a><a href="/en/">English</a>
 <a href="{P.REPO}" rel="noopener">GitHub 源码</a><a href="{P.ORG_URL}" rel="noopener">{esc(P.ORG)}</a></div>
@@ -302,6 +320,10 @@ def tail(page: dict) -> str:
     # quiz.js carries the whole 35-question bank, so it only ships to the pages
     # that actually render questions rather than riding along on every request.
     extra = '\n<script src="/assets/quiz.js" defer></script>' if page.get("quiz") else ""
+    # cert.js must be parsed before quiz.js runs its grading handler, since the
+    # quiz calls into the unlock hook that cert.js installs.
+    if page.get("cert"):
+        extra = '\n<script src="/assets/cert.js" defer></script>' + extra
     return f"""<script src="/assets/site.js" defer></script>{extra}
 </body>
 </html>

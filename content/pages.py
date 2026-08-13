@@ -10,14 +10,14 @@ whether to click, not stuffed with keywords.
 """
 
 ORIGIN = "https://ai4s.runixcloud.io"
-SITE_NAME = "AI4S for Programmers"
+SITE_NAME = "AI4S 生物数据方向 · 给程序员的入门"
 ORG = "Runix"
 ORG_URL = "https://runixcloud.io"
 REPO = "https://github.com/Runix-lab/ai4s-for-programmers"
 PUBLISHED = "2026-08-13"
 UPDATED = "2026-08-13"
 
-COURSE_NAME = "抗体数据 × AI for Science · 程序员两天速成营"
+COURSE_NAME = "抗体与蛋白数据 × AI for Science · 程序员两天速成营"
 TEACHES = [
     "蛋白质序列与抗体结构的数据表示",
     "抗原、表位、互补位与亲和力 KD 的读法",
@@ -31,6 +31,7 @@ NAV = [
     ("study/syllabus", "大纲"),
     ("study/labs", "实验"),
     ("study/quiz", "检验"),
+    ("study/exam", "结业考"),
     ("study/glossary", "术语表"),
     ("study/resources", "资源"),
     ("en", "EN"),
@@ -368,20 +369,22 @@ PAGES = [
     # ------------------------------------------------- 15 site root (AI4S line)
     dict(
         slug="", file="ai4s", crumb="首页",
-        h1="AI for Science，<br>讲给程序员听",
-        title="AI4S · AI for Science 给程序员的入门",
-        desc="AI for Science 里最难的部分不是科学，是数据工程——而那正是程序员已经会的事。免费开源的两天速成营，零生物背景可学，配 6 个可运行实验。",
-        keywords=["AI for Science", "AI4S", "AI4S 是什么", "AI for Science 入门",
-                  "程序员 AI 制药", "科学数据 工程", "AI4S 教程"],
-        eyebrow="RUNIX · AI FOR SCIENCE",
-        dek="这个领域最稀缺的不是模型能力，是<b>判断一份科学数据是真是假的能力</b>。"
-            "而做这件事需要的技能，你在软件工程里已经练了很多年。",
-        badges=["<b>免费</b> · 开源", "无需生物背景", "<b>6 个</b>可运行实验",
-                "内容 <b>CC BY-SA</b> · 代码 <b>MIT</b>"],
+        h1="看懂生物数据，<br>判断一个 AI4S 项目的真假",
+        title="AI4S 生物数据入门 · 给程序员的两天速成营",
+        desc="AI for Science 的生物数据方向：抗体与蛋白数据的采集、清洗与质量验证。最难的部分不是科学是数据工程，而那正是程序员的主场。免费开源，零生物背景可学。",
+        keywords=["AI for Science 生物", "AI4S 入门", "生物信息 数据清洗",
+                  "抗体 数据工程", "蛋白 数据 质量", "程序员 AI 制药",
+                  "生物数据 判断", "AI4S 教程"],
+        eyebrow="AI FOR SCIENCE · 生物数据方向 · 免费开源",
+        dek="两天，零生物背景，学会读懂一份抗体／蛋白数据集、"
+            "并在五分钟内判断它可不可信。<b>这个领域最稀缺的不是模型能力，"
+            "是判断一份科学数据是真是假的能力</b>——而那正是你已经练了很多年的东西。",
+        badges=["<b>2 天</b> · 8 节课", "<b>6 个</b>可运行实验", "<b>35 道</b>检验题",
+                "结业可领<b>结业证明</b>", "前置：<b>会写 Python</b>", "生物基础：<b>零</b>"],
         parent=None, prev=None, next=0, schema="Course", priority=1.0,
         changefreq="weekly", og="default", og_type="website",
-        og_headline="AI for Science，讲给程序员听",
-        og_kicker="Runix · 免费开源",
+        og_headline="看懂生物数据，判断一个 AI4S 项目的真假",
+        og_kicker="AI4S 生物数据方向 · 免费开源",
         faq=[
             ("AI4S 和普通的机器学习有什么区别？",
              "方法上没有本质区别，数据条件上有天壤之别。通用 AI 的数据近乎无限、标注便宜；"
@@ -390,11 +393,31 @@ PAGES = [
             ("没有科学背景能进入 AI for Science 领域吗？",
              "能。这个领域最缺的岗位之一是数据工程——把多个来源的科学数据接进来、归一到稳定主键、"
              "给每条记录标明证据强度、写质检断言。这些工作的核心技能是软件工程，不是实验科学。"),
-            ("从哪里开始学 AI for Science？",
+            ("这是完整的 AI for Science 课程吗？",
+             "不是。它只覆盖 AI for Science 里的生物数据方向——具体是抗体与蛋白质的"
+             "数据采集、清洗、实体归一与质量验证。材料、气候、天文等其它 AI4S 方向不在范围内，"
+             "模型训练与调参也不讲。课程首页有明确的范围声明。"),
+            ("从哪里开始学 AI for Science 的生物数据方向？",
              "从判断力开始，而不是从建模开始。先能读懂一份科学数据集的每一列、"
              "能判断它是否可信，再谈模型。本站的两天速成营就是按这个前提设计的，"
              "全部免费开源，零生物背景可学。"),
         ],
+    ),
+
+    # ------------------------------------------------- 16 final exam + cert
+    dict(
+        slug="study/exam", file="exam", crumb="结业考试",
+        h1="结业考试与结业证明",
+        title="结业考试 · 通过后可领结业证明",
+        desc="20 道结业考题，答对 16 题即可解锁结业证明并下载 PNG。证明在你自己的浏览器里生成，不上传任何内容，也不冒充第三方认证。",
+        keywords=["AI4S 结业考试", "生物数据 测验", "课程 结业证明"],
+        eyebrow="FINAL EXAM",
+        dek="20 题，答对 <b>16 题</b>即可解锁结业证明。"
+            "证明在本机生成、不上传、不收集任何信息。",
+        parent=0, prev=9, next=None, schema="Article", priority=0.75,
+        quiz=True, cert=True, og="quiz",
+        og_headline="结业考试 · 20 题达标可领结业证明",
+        og_kicker="AI4S 生物数据方向",
     ),
 ]
 

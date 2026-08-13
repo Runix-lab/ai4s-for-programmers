@@ -75,3 +75,28 @@
     if (el) el.style.background = 'var(--gold-soft)';
   }
 })();
+
+/* ---- click-to-load video ------------------------------------------------
+   The player is not embedded until someone asks for it: no third-party frame,
+   no cookies and no extra requests for the majority of visitors who never
+   press play, and the page still renders instantly on a slow connection. */
+(function () {
+  'use strict';
+  document.querySelectorAll('.embed[data-yt]').forEach(function (box) {
+    var btn = box.querySelector('.embed-play');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var id = box.getAttribute('data-yt');
+      var f = document.createElement('iframe');
+      // nocookie host, and autoplay only because the click was the consent
+      f.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(id) +
+              '?autoplay=1&rel=0&cc_load_policy=1';
+      f.title = box.getAttribute('data-title') || '视频';
+      f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture';
+      f.allowFullscreen = true;
+      f.loading = 'lazy';
+      box.innerHTML = '';
+      box.appendChild(f);
+    });
+  });
+})();

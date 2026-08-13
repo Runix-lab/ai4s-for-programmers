@@ -1,0 +1,64 @@
+<div class="key"><b>先说清楚这份证明是什么</b>
+<p>它是<b>自助生成</b>的：在你自己的浏览器里画出来，不上传任何东西，也没有第三方核验。<br>
+它能证明的是「<b>你完整跑过了这套公开材料并通过了考试</b>」，不是任何形式的资质认证。<br>
+一门讲「怎么识破被包装过的数据和资历」的课，不会给自己发一个假装很权威的证书。</p></div>
+
+<section>
+<h2>结业考试</h2>
+<p class="sub">20 题，覆盖 <a href="/study/what-ai-does/">S5</a>–<a href="/study/judgment/">S8</a>。
+<b>答对 16 题及以上</b>即可解锁结业证明。每题都有解析，做错的回对应小节重看。</p>
+<div class="quiz" data-bank="d2" data-cert><h3>结业考试 · 共 20 题 · 达标线 16</h3></div>
+</section>
+
+<section id="certgate">
+<h2>结业证明</h2>
+<div class="unit">
+<p>通过上面的考试后，这里会出现证明生成器。</p>
+<p style="color:var(--mut);font-size:14px">如果你之前已经在
+<a href="/study/quiz/">检验页</a> 做过题，也需要在这一页重做一遍——
+成绩不会被保存到任何地方（包括你自己的浏览器），这是刻意的。</p>
+</div>
+</section>
+
+<section id="cert" hidden data-pass="16" data-total="20">
+<h2>你的结业证明</h2>
+<p class="sub">填入要显示在证明上的名字，随时可以改。全程在本机完成，什么都不会上传。</p>
+
+<div class="unit">
+<label for="certname" style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">
+显示在证明上的名字</label>
+<input id="certname" type="text" maxlength="24" autocomplete="off"
+       placeholder="例如：崔涣 / cuihuan"
+       style="width:100%;max-width:340px;padding:11px 15px;border-radius:9px;
+              border:1px solid var(--line);background:var(--bg);color:var(--ink);
+              font:15px/1.4 inherit">
+<div id="certout" style="margin-top:20px"><p class="hint">填入名字后即可生成。</p></div>
+<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:16px">
+  <button id="certdl" class="grade" type="button" hidden>下载 PNG</button>
+  <span id="certmeta" style="font:12.5px/1 ui-monospace,Menlo,monospace;color:var(--mut)"></span>
+</div>
+</div>
+
+<div class="unit">
+<h3>想留个公开记录？</h3>
+<p>仓库里有一份结业名录 <code>GRADUATES.md</code>。
+提一个 PR 把自己加进去就行——<b>加不加都不影响这份证明的效力</b>（因为它本来就只代表你自己完成了）。</p>
+<pre>$ git clone https://github.com/Runix-lab/ai4s-for-programmers
+<i># 在 GRADUATES.md 末尾追加一行：</i>
+| 你的名字 | 2026-08-13 | 18/20 | ABCD123 | github.com/你的账号 |</pre>
+<p style="font-size:13.5px;color:var(--mut)">
+→ <a href="https://github.com/Runix-lab/ai4s-for-programmers/blob/main/GRADUATES.md" rel="noopener">查看结业名录</a></p>
+</div>
+</section>
+
+<section>
+<h2>没过？</h2>
+<div class="unit">
+<p>结业考的 20 题里，最容易错的集中在两节：</p>
+<ul>
+<li><a href="/study/falsification/">S7 质量与证伪</a> —— 交叉源验证、断言语义、403 不等于链接坏</li>
+<li><a href="/study/judgment/">S8 判定与商业</a> —— 三维验收、定量 KD 的追问、算术天花板</li>
+</ul>
+<p>这两节也正好是<b>全课最值钱的两节</b>。不用重看前面六节，直接回这两节即可。</p>
+</div>
+</section>
