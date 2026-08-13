@@ -95,8 +95,15 @@ h2+p.sub{color:var(--mut);font-size:14.5px;margin:0 0 18px;max-width:64ch}
 .ses>p.sub{color:var(--mut);font-size:14.5px;margin:0 0 18px;max-width:64ch}
 
 .unit{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:20px 24px;margin:16px 0}
-.unit h3,.unit h4{margin:0 0 12px;font-size:16.5px;font-weight:680;scroll-margin-top:70px}
-.unit h3 span,.unit h4 span{font:600 11px/1 ui-monospace,Menlo,monospace;color:var(--mut);margin-right:9px}
+/* Unit headings are h2 on lesson pages and h3 elsewhere; both need the same
+   treatment, and both must override the page-level h2 margins above. */
+.unit h2,.unit h3,.unit h4{margin:0 0 12px;font-size:17px;font-weight:680;
+  letter-spacing:-.012em;scroll-margin-top:70px}
+.unit h2 span,.unit h3 span,.unit h4 span{font:600 11px/1 ui-monospace,Menlo,monospace;
+  color:var(--mut);margin-right:10px;display:inline-block}
+.unit h3:not(:first-child){margin-top:26px}
+.lab h2,.lab h3,.lab h5{margin:0 0 6px;font-size:15.5px;color:var(--code);font-weight:700;
+  scroll-margin-top:70px;letter-spacing:-.01em}
 .unit p{margin:10px 0;max-width:66ch}
 .unit ul,.unit ol{padding-left:21px;max-width:66ch}
 .unit li{margin:6px 0}
@@ -138,7 +145,6 @@ pre a{color:#8ea3f0}
 
 /* ---------- callouts ---------- */
 .lab{border:1px solid var(--code);border-radius:11px;background:var(--code-soft);padding:18px 22px;margin:18px 0}
-.lab h3,.lab h5{margin:0 0 6px;font-size:15px;color:var(--code);font-weight:700;scroll-margin-top:70px}
 .lab p{margin:6px 0;font-size:14.5px}
 .lab ul{margin:8px 0;padding-left:20px;font-size:14.5px}
 .trap{background:var(--warn-soft);border-radius:11px;padding:17px 22px;margin:18px 0;font-size:14.5px}
