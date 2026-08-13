@@ -74,12 +74,28 @@ CLOUDFLARE_API_TOKEN="$TOKEN" CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" \
 echo "==> Verify the live site"
 sleep 6
 fail=0
-for path in / /course/ /course/formats-and-ids/ /course/falsification/ \
-            /labs/ /quiz/ /glossary/ /resources/ /en/ \
-            /sitemap.xml /robots.txt /assets/og/default.png; do
+
+# Pages that must serve directly.
+for path in / /study/ /study/syllabus/ \
+            /study/protein-as-string/ /study/binding-and-affinity/ \
+            /study/formats-and-ids/ /study/hands-on-day1/ \
+            /study/what-ai-does/ /study/data-engineering/ \
+            /study/falsification/ /study/judgment/ \
+            /study/labs/ /study/quiz/ /study/glossary/ /study/resources/ /en/ \
+            /sitemap.xml /robots.txt /favicon.ico /assets/og/default.png; do
   code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$DOMAIN$path" || echo 000)"
   printf '    %-34s %s\n' "$path" "$code"
   [ "$code" = "200" ] || fail=1
+done
+
+# Paths that must 301 rather than 200. Checking these for 200 was the bug in the
+# first version of this script: the redirects were working correctly and the
+# verification reported a failed deploy.
+for path in /course/ /labs/ /glossary/ /s7; do
+  code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 "$DOMAIN$path" || echo 000)"
+  dest="$(curl -s -o /dev/null -w '%{redirect_url}' --max-time 20 "$DOMAIN$path" || true)"
+  printf '    %-34s %s -> %s\n' "$path" "$code" "${dest#"$DOMAIN"}"
+  [ "$code" = "301" ] || fail=1
 done
 
 if [ "$fail" != "0" ]; then
