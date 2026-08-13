@@ -1,0 +1,9 @@
+# Labs 1-4 and 6 need nothing but the standard library plus pandas.
+pandas>=2.0
+
+# Lab 5 parses a real mmCIF structure and does the spatial neighbour search.
+gemmi>=0.6
+
+# Only needed to REGENERATE the sample dataset (labs/data/build_sample.py).
+# Not required to run any lab.
+# abnumber>=0.3

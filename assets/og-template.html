@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head><meta charset="utf-8">
+<style>
+  /* Rendered to a 1200x630 PNG by headless Chrome at build time. Everything here
+     is inline and system-font based — the renderer has no network access. */
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1200px;height:630px;background:#f7f6f3;color:#16181d;overflow:hidden;
+    font:400 16px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB",sans-serif;
+    display:flex;flex-direction:column;justify-content:space-between;padding:72px 80px;position:relative}
+  /* the two accent hues stand for the two sides the course keeps comparing */
+  .rail{position:absolute;left:0;top:0;bottom:0;width:14px;
+    background:linear-gradient(180deg,#2e3f8c 0 50%,#1c6b58 50% 100%)}
+  .kicker{font:600 19px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.2em;
+    color:#a8382c;text-transform:uppercase}
+  h1{font-size:62px;font-weight:750;letter-spacing:-.03em;line-height:1.16;max-width:17ch}
+  .strip{display:flex;gap:0;border:1px solid #e0ddd6;border-radius:12px;overflow:hidden;
+    font-size:21px;align-self:flex-start}
+  .strip div{padding:15px 26px}
+  .a{background:#e4e8f7;color:#2e3f8c;font-weight:650}
+  .m{background:#fffefc;color:#697080;border-left:1px solid #e0ddd6;border-right:1px solid #e0ddd6}
+  .b{background:#dff0ea;color:#1c6b58;font-family:ui-monospace,Menlo,Consolas,monospace}
+  footer{display:flex;justify-content:space-between;align-items:flex-end;font-size:22px;color:#697080}
+  footer b{font:700 26px/1 ui-monospace,Menlo,Consolas,monospace;color:#16181d;letter-spacing:-.02em}
+  footer b span{color:#1c6b58}
+</style></head>
+<body>
+  <div class="rail"></div>
+  <div>
+    <p class="kicker">{{KICKER}}</p>
+    <h1 style="margin-top:26px">{{HEADLINE}}</h1>
+  </div>
+  <div class="strip"><div class="a">蛋白质序列</div><div class="m">≈</div><div class="b">str</div></div>
+  <footer><b>AI4S<span>/dev</span></b><span>ai4s.runixcloud.io</span></footer>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI for Science for Programmers · Free Course</title>
+<meta name="description" content="A free two-day course that teaches AI for Science to programmers with zero biology background, by mapping every biological concept onto one you already know.">
+<meta name="keywords" content="AI for Science course, AI4S for programmers, antibody data engineering, IMGT vs Kabat vs Chothia, epitope vs paratope, protein data for software engineers">
+<link rel="canonical" href="https://ai4s.runixcloud.io/en/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="AI for Science for Programmers · Free Course">
+<meta property="og:description" content="A free two-day course that teaches AI for Science to programmers with zero biology background, by mapping every biological concept onto one you already know.">
+<meta property="og:url" content="https://ai4s.runixcloud.io/en/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI for Science for Programmers · Free Course">
+<meta name="twitter:description" content="A free two-day course that teaches AI for Science to programmers with zero biology background, by mapping every biological concept onto one you already know.">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/en.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"English","item":"https://ai4s.runixcloud.io/en/"}]},{"@type":"Course","@id":"https://ai4s.runixcloud.io/en/#course","name":"抗体数据 × AI for Science · 程序员两天速成营","description":"A free two-day course that teaches AI for Science to programmers with zero biology background, by mapping every biological concept onto one you already know.","url":"https://ai4s.runixcloud.io/en/","inLanguage":"zh-CN","isAccessibleForFree":true,"teaches":["蛋白质序列与抗体结构的数据表示","抗原、表位、互补位与亲和力 KD 的读法","IMGT / Kabat / Chothia 三套抗体编号体系的差异","生物数据的实体归一与交叉源验证","AI for Science 中数据质量的证伪方法"],"educationalLevel":"Beginner","provider":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","category":"Free","availability":"https://schema.org/InStock"},"hasCourseInstance":{"@type":"CourseInstance","courseMode":"online","courseWorkload":"PT10H","inLanguage":"zh-CN"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is AI for Science (AI4S)?","acceptedAnswer":{"@type":"Answer","text":"AI for Science means applying machine learning to natural-science problems — predicting a protein's 3D structure from its sequence, predicting binding strength between molecules, or designing proteins from scratch. Unlike general-purpose AI, the data comes from real experiments: expensive to produce and tiny in volume, which is why data quality usually matters more than model choice."}},{"@type":"Question","name":"Do I need a biology background?","acceptedAnswer":{"@type":"Answer","text":"No. The course assumes zero biology. Every concept is introduced through a programming analogy you already understand — protein sequences are strings, UniProt accessions are primary keys, antibody numbering schemes are competing schema versions — before any biology is explained. Python literacy is the only prerequisite."}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/" class="on">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><span>English</span></nav>
+<main id="main">
+<header><p class="eyebrow">FREE · OPEN SOURCE · NO BIOLOGY REQUIRED</p><h1>AI for Science, explained for programmers</h1><p class="dek">Not a biology course. A <b>data</b> course that happens to be about molecules — an antibody is four strings, target normalisation is foreign-key resolution, and QC is just writing assertions.</p></header>
+<div class="key"><b>Note on language</b>
+<p>The full course is currently written in <b>Chinese</b>. This page is the English
+overview: what the course covers, why it is structured the way it is, and the
+handful of ideas that transfer regardless of which language you read it in.<br>
+An English translation is planned. If you want it, say so in
+<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">an issue</a> —
+that is how it gets prioritised.</p></div>
+
+<section>
+<h2>The premise</h2>
+<p>Biology is not hard because it is complicated. It is hard because every
+introduction assumes you already have the vocabulary. So this course never
+explains a biological concept on its own terms first — it maps it onto something
+you already know, and only then tells you what it means biologically.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>Biology</th><th>What you already know</th><th>Why the mapping holds</th></tr></thead>
+<tbody>
+<tr><td><b>Protein sequence</b></td><td class="mono">string</td>
+<td>Literally a string over a 20-letter alphabet</td></tr>
+<tr><td><b>Antibody</b></td><td class="mono">object holding 4 strings</td>
+<td>2 heavy chains + 2 light chains</td></tr>
+<tr><td><b>Variable / constant region</b></td><td class="mono">instance fields / shared class members</td>
+<td>The variable part differs per antibody; the constant part carries no distinguishing information</td></tr>
+<tr><td><b>CDR</b></td><td class="mono">the few substrings that decide behaviour</td>
+<td>Six short loops that determine what the antibody binds</td></tr>
+<tr><td><b>KD (affinity)</b></td><td class="mono">float on a log scale, lower is better</td>
+<td>Read it like p99 latency: only the order of magnitude matters</td></tr>
+<tr><td><b>UniProt accession</b></td><td class="mono">primary key / UUID</td>
+<td>Globally unique and stable</td></tr>
+<tr><td><b>Protein aliases, CD numbers</b></td><td class="mono">display names — <u>they collide</u></td>
+<td>PD-1 = PDCD1 = CD279, but CCR4 is also recorded as an alias of a different gene</td></tr>
+<tr><td><b>IMGT / Kabat / Chothia</b></td><td class="mono">competing schema versions</td>
+<td>Historical debt; each carves different field boundaries out of the same sequence</td></tr>
+<tr><td><b>Cross-source validation</b></td><td class="mono">you cannot verify a source with itself</td>
+<td>Checking a result with the source that produced it is circular reasoning</td></tr>
+<tr><td><b>QC flags</b></td><td class="mono">a known-issues list</td>
+<td>An all-clear QC report is the suspicious outcome, not the good one</td></tr>
+</tbody></table></div>
+
+<div class="key"><b>The whole argument in one line</b>
+<p>Every data problem in this field is one you have already met in software
+engineering. <b>What you are missing is the vocabulary, not the ability.</b></p></div>
+</section>
+
+<section>
+<h2>What the course covers</h2>
+<div class="scroll"><table>
+<thead><tr><th>Session</th><th>Topic</th><th></th></tr></thead>
+<tbody>
+<tr><td class="mono">S1</td><td>Molecules as data types: sequences, chains, variable regions, CDRs</td>
+<td><a href="/course/protein-as-string/">→</a></td></tr>
+<tr><td class="mono">S2</td><td>Binding: antigen vs epitope vs paratope, KD, and how it is measured</td>
+<td><a href="/course/binding-and-affinity/">→</a></td></tr>
+<tr><td class="mono">S3</td><td>Formats and identifiers: FASTA, PDB, UniProt, numbering schemes</td>
+<td><a href="/course/formats-and-ids/">→</a></td></tr>
+<tr><td class="mono">S4</td><td>Hands-on: open one real record, then health-check a whole dataset</td>
+<td><a href="/course/hands-on-day1/">→</a></td></tr>
+<tr><td class="mono">S5</td><td>What AI actually does here — and precisely where AlphaFold stops</td>
+<td><a href="/course/what-ai-does/">→</a></td></tr>
+<tr><td class="mono">S6</td><td>Data engineering: four layers, and five failures that really happened</td>
+<td><a href="/course/data-engineering/">→</a></td></tr>
+<tr><td class="mono"><b>S7</b></td><td><b>Quality and falsification — reproduce every bug yourself</b></td>
+<td><a href="/course/falsification/">→</a></td></tr>
+<tr><td class="mono">S8</td><td>Judgement: acceptance criteria, ten questions, red flags</td>
+<td><a href="/course/judgment/">→</a></td></tr>
+</tbody></table></div>
+<p>Plus <a href="/labs/">six runnable Python labs</a> and
+<a href="/quiz/">35 self-check questions</a>.</p>
+</section>
+
+<section>
+<h2>Three things that transfer, whatever language you read</h2>
+
+<div class="unit">
+<h3>1. You cannot validate a source with itself</h3>
+<p>Normalising gene names with UniProt and then checking the result with UniProt
+is circular reasoning. You need a second, <b>independent</b> authority — HGNC, in
+this case — and you only accept records where both agree.</p>
+<p>This is exactly the rule you already follow when writing tests: an assertion
+must not be derived from the logic under test. In
+<a href="/labs/#lab4">Lab 4</a> you run both APIs live and watch them disagree.</p>
+</div>
+
+<div class="unit">
+<h3>2. A field name means whatever the pipeline that produced it meant</h3>
+<p>PDB chain IDs carry no semantics — they are chosen by whoever deposited the
+structure. In <code>5B8C</code>, the heavy chains are B/E/H/K and the light
+chains are A/D/G/J. Any code that assumes <code>H</code> means heavy chain
+silently computes the wrong epitope.</p>
+<p>The general form: <b>a column called <code>Hchain</code> is somebody's
+judgement call, not a fact read off the file.</b> You are entitled to ask how
+that judgement was made.</p>
+</div>
+
+<div class="unit">
+<h3>3. A dataset with no known defects is the suspicious one</h3>
+<p>Real curated data always has ambiguity codes, partial chains, missing
+provenance. A QC report that is entirely green usually means the QC was shallow,
+not that the data is perfect. <b>Ask for the defect list; be wary of anyone who
+cannot produce one.</b></p>
+</div>
+</section>
+
+<section>
+<h2>How this material is maintained</h2>
+<div class="unit">
+<p>Every factual claim in this course was re-verified against primary sources
+before publication — database REST APIs, the original numbering-scheme papers,
+and the structures themselves. <b>That pass found and corrected fourteen
+errors in the first version</b>, including one in the very table that this site
+uses as its flagship example.</p>
+<p>Two of them are worth naming here, because they are the kind of thing that
+gets copied around unexamined:</p>
+<ul>
+<li><b>Kabat and Chothia define CDR-H3 identically.</b> The widely repeated claim
+that all three schemes carve different H3 boundaries is wrong; the differences
+are in H1 and L1.</li>
+<li><b>VHH nanobodies come from camelids only.</b> Shark single-domain antibodies
+are VNAR, derived from IgNAR — a separate evolutionary origin, not a kind of VHH.</li>
+</ul>
+<div class="key"><b>Why say this out loud</b>
+<p>Because a course about verifying other people's data has no business hiding
+its own corrections. The whole method is on
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub</a>;
+if you find an error, <a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">open an issue</a>
+and it gets fixed in public.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Start here</h2>
+<div class="grid">
+<a class="cardlink" href="/course/"><em>FULL COURSE</em><b>Course overview →</b>
+<span>Two days, eight sessions, with a shorter path if you have less time.</span></a>
+<a class="cardlink" href="/course/falsification/"><em>ONE HOUR</em><b>Jump to S7 →</b>
+<span>The core session: reproduce four real data bugs yourself.</span></a>
+<a class="cardlink" href="/glossary/"><em>REFERENCE</em><b>Glossary →</b>
+<span>45 terms, each with a plain explanation and a programming analogy.</span></a>
+</div>
+</section>
+
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

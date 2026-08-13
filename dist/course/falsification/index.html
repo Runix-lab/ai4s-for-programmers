@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交叉源验证：为什么自证等于循环论证</title>
+<meta name="description" content="全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。">
+<meta name="keywords" content="交叉源验证, 数据 证伪, 断言式 质检, 表位 计算, 假阳性 词边界, 数据质量 验证">
+<link rel="canonical" href="https://ai4s.runixcloud.io/course/falsification/">
+<link rel="prev" href="https://ai4s.runixcloud.io/course/data-engineering/">
+<link rel="next" href="https://ai4s.runixcloud.io/course/judgment/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="交叉源验证：为什么自证等于循环论证">
+<meta property="og:description" content="全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/course/falsification/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/falsify.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="交叉源验证：为什么自证等于循环论证">
+<meta name="twitter:description" content="全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/falsify.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S7 · 质量与证伪","item":"https://ai4s.runixcloud.io/course/falsification/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/falsification/#lesson","name":"质量与证伪：亲手复现那些坑","description":"全课最核心的一节。四个实验让你亲手把 bug 跑出来：词边界假阳性、别名劫持、从三维结构实算表位、断言式质检，以及验证方法本身也要被验证。","url":"https://ai4s.runixcloud.io/course/falsification/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT90M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["交叉源验证方法","子串匹配假阳性的成因","从三维结构计算表位","断言式数据质检"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"什么是交叉源验证？","acceptedAnswer":{"@type":"Answer","text":"用一个独立的权威数据源去复核另一个源产出的结果，两边一致才算通过。关键在于「独立」：如果用产出结果的同一个源去检查结果，那是循环论证，等同于写测试时用被测代码自己的逻辑去断言。"}},{"@type":"Question","name":"为什么数据全部通过质检反而可疑？","acceptedAnswer":{"@type":"Answer","text":"真实数据一定有已知瑕疵——测序模糊码、部分序列、来源缺失。一份 QC 标记全是 OK 的数据集，更可能说明质检做得不够细，而不是数据完美。拿不出缺陷清单的供应商值得警惕。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S7 · 质量与证伪</span></nav>
+<main id="main">
+<header><p class="eyebrow">DAY 2 · S7 · 下午 90 分钟</p><h1>质量与证伪：亲手复现那些坑</h1><p class="dek">这一节是全课的核心。四个实验，<b>每个都让你亲手把 bug 跑出来</b>。</p></header>
+<p>前面六节都是为这一节做准备。<b>判断力不来自知识，来自亲手见过错误发生。</b>
+下面四个实验，每一个都会在你自己的终端里把一个真实的 bug 跑出来。</p>
+
+<div class="lab">
+<h2 id="lab3">LAB 3 · 亲手复现子串匹配 bug</h2>
+<pre>$ python labs/lab3_substring_bug.py</pre>
+<p>你会看到三类 bug 现场发生：</p>
+<ul>
+<li><b>没加词边界</b>：HER2 的别名 <code>neu</code> 在抗原名字段里
+裸子串会命中 <code>NEURAMINIDASE</code>、
+<code>...NEUTRALIZING ANTIBODY</code> —— <b>全是假阳性</b>
+（在真实规模的数据上，这一条别名就能造出上百条假配对）。
+加上<b>两侧</b>边界断言 <code>(?&lt;![A-Za-z0-9])neu(?![A-Za-z0-9])</code> 之后归零。
+<div class="trap" style="margin:10px 0 0"><b>这里有个自带的二级陷阱，脚本会让你踩一次：</b>
+只加左侧的 <code>(?&lt;![A-Za-z0-9])</code> <b>是不够的</b>。
+<code>NEURAMINIDASE</code> 里的 NEU 正好在<b>词首</b>，左侧断言对它完全无效。<br>
+<b>必须两侧都加</b>，或者直接用 <code>\bneu\b</code>。<br>
+这门课第一版就写错了这一条——<b>「修好了」和「验证过修好了」是两件事。</b></div></li>
+<li><b>没做最长匹配消歧</b>：PD-1 的基因全名
+<code>programmed cell death 1</code> 是 PD-L1 全名
+<code>programmed cell death 1 ligand 1</code> 的<b>前缀</b>，
+所以真正的 PD-L1 抗原<b>会被同时误判成 PD-1</b>。
+<b>加词边界也救不了</b>——必须做包含关系消歧：同一段文本里，长匹配压制短匹配。
+<div style="font-size:13px;color:var(--mut);margin-top:6px">
+（注意这里用的是 HGNC 的<b>基因</b>全名。UniProt 的<b>蛋白</b>名是
+<code>Programmed cell death protein 1</code>，多了个 protein，就不构成前缀了——
+<b>「是不是前缀」这件事本身就取决于你用的是哪个源的哪个字段。</b>
+这正是本节要教的东西。）</div></li>
+<li><b>语义陷阱（正则无解）</b>：<code>Anti-App Tag Fab</code>
+是结合实验室<b>标签肽</b>的试剂抗体，不是抗 APP 蛋白的。
+而 anti-<b>HA</b> tag 里的 HA 与流感的 <b>HA</b> 蛋白同名。
+<b>这一类靠正则解决不了，只能靠语境规则或人工规则表。</b></li>
+</ul>
+<div class="key"><b>要带走的结论</b><p>前两类是<b>实现 bug</b>，能修；
+第三类是<b>方法边界</b>，只能承认并披露。
+一个成熟的数据供应商会明确告诉你哪些属于第三类、占比多少；
+不成熟的会假装它不存在。</p></div>
+</div>
+
+<div class="lab">
+<h2 id="lab4">LAB 4 · 亲手做一次交叉源验证 <span style="color:var(--warn)">★ 本课最重要的实验</span></h2>
+<pre>$ python labs/lab4_cross_source.py</pre>
+<p>脚本把同一个问题问三次：一次问
+<a href="https://www.genenames.org/" rel="noopener">HGNC</a>（基因命名权威），
+两次问 <a href="https://www.uniprot.org/" rel="noopener">UniProt</a>——
+用两种<b>都很「合理」</b>的查法。真实输出：</p>
+<pre>输入     HGNC      UniProt-A 朴素                      UniProt-B 严谨
+CCR4   CCR4      CCR4 P51679 [Homo sapiens]        <u>NOCT Q9UK39</u>      <i>← 别名劫持</i>
+HER2   ERBB2     <u>GTF1 P53260 [Saccharomyces]</u>     ERBB2 P04626     <i>← 跨物种泄漏</i>
+PD-1   PDCD1     PD-1 Q9UMF3 [Homo sapiens]        (查不到)
+OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>← 兔子同源</i></pre>
+<div class="key"><b>这张表最重要的一点</b><p><b>两种查法都不对，而且它们以不同方式错。</b><br>
+「朴素」查法（全文检索、不限物种、取第一条）在 CCR4 这行反而是对的，
+却把 HER2 解析成了<b>酿酒酵母</b>的一个基因、把 OX40 解析成兔子的同源基因——
+<b>而这些结果字段齐全、格式正确，从数据表面完全看不出来</b>。<br><br>
+「严谨」查法（精确基因名 + 限人源 + 只要人工审校条目）挡住了物种泄漏，
+却在 CCR4 上被<b>别名劫持</b>，解析到了 NOCT 上。<br><br>
+<b>所以正确做法不是「换一个更好的查法」，是交叉验证。</b>
+这就是这个实验的全部结论。</p></div>
+<div class="key"><b>这个实验要你记住的</b><p>用产出结果的<b>同一个源</b>去检查结果 = <b>循环论证</b>。
+必须拿<b>另一个独立权威源</b>来对，两边一致才算过。<br>
+这和你写测试时「不能用被测代码自己的逻辑去断言」是<b>完全一样</b>的道理。<br><br>
+更进一步：注意「查不到」那几行是<b>不一致但不算错</b>——
+严谨查法查不到 PD-1、OX40，只是因为它们是<b>别名</b>不是基因符号。
+<b>把「冲突」和「查不到」分开处理</b>，是这个实验第二重要的收获。
+全部当成错误会淹没真正的冲突。</p></div>
+<div class="trap"><b>这一条同样适用于你自己：</b>你用某个 AI 生成了一份数据，
+再用同一个 AI 去检查它——那不是验证，那是让它复述一遍自己的答案。
+<b>独立性是验证的全部价值所在。</b></div>
+</div>
+
+<div class="lab">
+<h2 id="lab5">LAB 5 · 亲手从三维结构算出表位</h2>
+<pre>$ python labs/lab5_compute_epitope.py</pre>
+<p>本质上是一次<b>空间近邻查询</b>：把抗体所有原子和抗原所有原子丢进 KD 树，
+找出距离小于阈值的原子对，两侧涉及的残基分别就是<b>互补位</b>和<b>表位</b>。</p>
+<pre>原子级接触 231 对（重原子间距 &lt; 4.5 Å）
+
+表位（抗原一侧被抓住的残基）:
+   S202  (<u>SEP</u>)  接触 21 次  <b>← 磷酸化修饰！</b>
+   P203  (PRO)  接触 47 次
+   T205  (<u>TPO</u>)  接触 63 次  <b>← 磷酸化修饰！</b>
+   ...
+共 8 个表位残基、18 个互补位残基</pre>
+<p>算出来的 <code>S202;P203;G204;T205;P206;G207;S208;R209</code>
+与数据表里那一列<b>逐字符一致</b>——因为表里那列就是这么算出来的，不是抄的。</p>
+<div class="key"><b>三个收获</b><p><b>① 阈值和原子集合都是约定，不是真理。</b>
+「4.5 Å」这个数字必须连同<b>算的是哪些原子</b>一起说
+（这里是<b>重原子</b>间距，即忽略氢原子）。
+4.0 / 4.5 / 5.0 Å 三种取值都有人用，算出的表位残基数会随之变化。
+<b>所以阈值和原子集合必须随数据一起交付</b>——不写清楚的表位列没法和别人的比较。<br><br>
+<b>② 残基编号也要说明基准。</b>下面那串 <code>S202…R209</code>
+是按 <b>tau 的 2N4R 亚型（441 aa）</b>编号的。
+换一个亚型，同一个残基的编号就变了——
+这和 <a href="/course/data-engineering/#five-traps">S6 第 ⑤ 个坑</a>（跨毒株编号失效）是<b>同一个问题</b>。
+<b>这门课自己教了坐标基准这一课，第一版却没给自己的例子标基准。</b><br><br>
+<b>③ 残基名会告诉你额外信息。</b><code>SEP</code>／<code>TPO</code>
+是磷酸化修饰过的丝氨酸／苏氨酸，说明这个抗体识别的是<b>磷酸化状态的</b>目标蛋白，
+而不是它本身。这个信息只在三维结构里有，序列里没有。</p></div>
+<div class="trap"><b>顺带记住 <a href="/course/formats-and-ids/#pdb">S3 那个坑</a>：</b>
+这个例子里抗原链是 <code>P</code> 不是 <code>A</code>。
+PDB 的链 ID 由沉积者自定、没有语义，<b>写死链名是这一步最常见的 bug</b>。</div>
+</div>
+
+<div class="lab">
+<h2 id="lab6">LAB 6 · 用写单元测试的方式做质检</h2>
+<pre>$ python labs/lab6_assert_qc.py</pre>
+<p>质检不是「出一份统计报告」，是<b>写一组必须成立的断言</b>，挂了就打印具体哪几行。
+跑完你会看到这几类断言：</p>
+<div class="scroll"><table>
+<thead><tr><th>断言</th><th>你熟悉的版本</th></tr></thead>
+<tbody>
+<tr><td>主键唯一、外键无孤儿、值域合法</td><td class="mono">数据库约束</td></tr>
+<tr><td><b>每个 CDR 都是所在链的子串</b></td><td class="mono">内部一致性检查<br>（最容易被忽略的一类）</td></tr>
+<tr><td>含模糊码的记录<b>均已在 QC_flags 披露</b></td><td class="mono">注意断言的语义：<br>不是「不许有缺陷」，是「不许有<u>未披露的</u>缺陷」</td></tr>
+<tr><td>抽样溯源链接可达</td><td class="mono">冒烟测试<br><b>← 这里有个陷阱</b></td></tr>
+</tbody></table></div>
+<div class="trap"><b>Lab 6 的陷阱（自己跑出来体会）：</b>
+出版社和数据库网站会返回 <code>403</code>（反爬）、<code>429</code>（限流）——
+<b>这不等于链接坏了</b>。如果断言写成「必须全部 200」，
+就会把大量好链接误判成坏的，然后你会去「修」一个根本不存在的问题。<br><br>
+<b>教训：验证方法本身也需要被验证。</b>
+这和「测试挂了，先看是代码错了还是测试写错了」是同一件事——
+只不过在数据工程里，<b>没有人会自动提醒你去看第二种可能</b>。</div>
+<div class="key"><b>断言式质检的真正好处</b><p>它把「数据质量」从一个形容词变成了<b>可执行、可回归、可进 CI</b> 的东西。
+数据变了、管线改了，重跑一遍立刻知道有没有破。<br>
+你已经知道怎么做这件事——这就是为什么程序员做数据治理有天然优势。</p></div>
+</div>
+
+<div class="key"><b>本节小结：证伪清单</b>
+<p>拿到任何一份数据，按这个顺序找问题：<br>
+① 字段匹配是不是用了裸子串／会冲突的别名？<br>
+② 归一化结果有没有用<b>独立源</b>复核？<br>
+③ 算出来的列（表位、CDR）有没有说明<b>算法和阈值</b>？<br>
+④ 缺陷清单在哪？<b>全 OK 就是最大的红旗</b>。<br>
+⑤ 验证方法本身有没有被验证过？</p></div>
+
+<section>
+<h2>当堂自测</h2>
+<p class="sub">六道题。这一节的题最值得认真做。</p>
+<div class="quiz" data-bank="d2" data-sec="s7"><h3>S7 · 质量与证伪</h3></div>
+</section>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/data-engineering/" rel="prev"><small>上一节</small>S6 · 数据工程</a><a class="n" href="/course/judgment/" rel="next"><small>下一节</small>S8 · 判定与商业</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/quiz.js" defer></script>
+</body>
+</html>

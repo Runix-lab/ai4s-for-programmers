@@ -1,0 +1,247 @@
+<div class="gfilter">
+  <label class="sr-only" for="gfilter">搜索术语</label>
+  <input id="gfilter" type="search" placeholder="输入中文、英文或缩写，例如：表位 / epitope / CDR" autocomplete="off">
+  <p id="gcount" style="margin:8px 0 0;font-size:12.5px;color:var(--mut)">共 45 条</p>
+</div>
+
+<section class="ggroup">
+<h2>分子与结构</h2>
+<dl>
+
+<div class="gterm" id="t-amino-acid"><dt>氨基酸 <span class="en">amino acid</span></dt>
+<dd>蛋白质的组成单元，标准的有 20 种，每种用一个大写字母表示。
+<span class="as">≈ 字符集（20 个字母）</span></dd></div>
+
+<div class="gterm" id="t-sequence"><dt>序列 <span class="en">sequence</span></dt>
+<dd>把一个蛋白质的氨基酸按顺序写成的字符串，如 <code>DVQLQESGPGLV…</code>。
+这个领域一切数据的基础形态。<span class="as">≈ str</span></dd></div>
+
+<div class="gterm" id="t-residue"><dt>残基 <span class="en">residue</span></dt>
+<dd>序列里的一个位置。说「第 202 位残基」就是说「字符串的第 202 个字符」，
+只不过它还带着编号基准这个上下文。<span class="as">≈ 字符串的一个索引位</span></dd></div>
+
+<div class="gterm" id="t-fold"><dt>折叠 <span class="en">folding</span></dt>
+<dd>一维序列自发卷成特定三维形状的过程。<b>形状决定功能</b>，
+所以「序列 → 结构 → 功能」是整个领域的主线。</dd></div>
+
+<div class="gterm" id="t-structure"><dt>结构 <span class="en">structure</span></dt>
+<dd>蛋白质的三维原子坐标。实验测定成本高（晶体学、冷冻电镜），所以数量远少于序列。
+<span class="as">≈ 每个原子一条 (x, y, z) 记录</span></dd></div>
+
+<div class="gterm" id="t-antibody"><dt>抗体 <span class="en">antibody / immunoglobulin, Ig</span></dt>
+<dd>免疫系统用来识别特定目标的蛋白。最常见的 IgG 形态是 Y 形，
+由 2 条重链 + 2 条轻链组成。（分泌型 IgM 是五聚体、分泌型 IgA 常是二聚体，
+但做数据时你遇到的绝大多数是 IgG 形态。）
+<span class="as">≈ 由 4 条 string 组成的复合对象</span></dd></div>
+
+<div class="gterm" id="t-heavy-light"><dt>重链 / 轻链 <span class="en">heavy chain / light chain</span></dt>
+<dd>抗体的两种链，重链长、轻链短。数据字段里常写作 H / L。</dd></div>
+
+<div class="gterm" id="t-variable"><dt>可变区 <span class="en">variable region, VH / VL</span></dt>
+<dd>Y 的两个尖端，每个抗体都不同，<b>决定这个抗体抓谁</b>。做数据时保留的就是这一段。
+<span class="as">≈ 实例字段</span></dd></div>
+
+<div class="gterm" id="t-constant"><dt>恒定区 <span class="en">constant region, CH / CL</span></dt>
+<dd>Y 的下半部分，同类抗体几乎完全一样，对区分实例没有信息量，通常切掉。
+<span class="as">≈ 类的公共部分</span></dd></div>
+
+<div class="gterm" id="t-cdr"><dt>CDR / 互补决定区 <span class="en">complementarity-determining region</span></dt>
+<dd>可变区里真正伸出去接触目标的 6 个环（重链 3 个、轻链 3 个）。
+占序列比例很小却决定特异性。<span class="as">≈ 决定行为的那几个关键子串</span></dd></div>
+
+<div class="gterm" id="t-cdrh3"><dt>CDRH3</dt>
+<dd>重链的第三个 CDR，<b>最长、变化最大</b>，由基因重组随机拼接产生，
+是特异性的主要来源。去重和聚类通常以它为轴。<span class="as">≈ 天然主键</span></dd></div>
+
+<div class="gterm" id="t-framework"><dt>框架区 <span class="en">framework region, FR</span></dt>
+<dd>可变区里 CDR 之外的部分，起支撑作用，序列上保守得多。
+<span class="as">≈ 骨架代码，CDR 是可插拔的策略</span></dd></div>
+
+<div class="gterm" id="t-vhh"><dt>VHH / 纳米抗体 <span class="en">nanobody, sdAb</span></dt>
+<dd><b>只有重链、没有轻链</b>的单域抗体，来自<b>骆驼科动物</b>（羊驼、骆驼、美洲驼）。
+个头小、易改造，是热门方向。<b>写代码判断「有无轻链」时必须考虑这一类。</b></dd></div>
+
+<div class="gterm" id="t-vnar"><dt>VNAR / IgNAR</dt>
+<dd>来自<b>鲨鱼</b>的单域抗体，与 VHH 是<b>独立演化</b>出来的两套东西。
+「VHH 来自羊驼和鲨鱼」是流传很广的<b>错误说法</b>——鲨鱼那类叫 VNAR。</dd></div>
+
+<div class="gterm" id="t-fab"><dt>Fab / Fv / scFv</dt>
+<dd>抗体的几种常见片段形式。Fv 是最小的完整识别单元（VH + VL）；
+scFv 是用一段接头把 VH 和 VL 连成单链；Fab 还带一部分恒定区。
+数据里同一个抗体可能以不同片段形式出现。</dd></div>
+
+<div class="gterm" id="t-germline"><dt>种系基因 <span class="en">germline gene</span></dt>
+<dd>抗体可变区重组前的基因模板。切可变区、判断编号边界都要与它比对。
+<span class="as">≈ 基类 / 模板，实例由它变异而来</span></dd></div>
+</dl>
+</section>
+
+<section class="ggroup">
+<h2>结合与亲和力</h2>
+<dl>
+
+<div class="gterm" id="t-antigen"><dt>抗原 <span class="en">antigen</span></dt>
+<dd>被抗体抓住的<b>整个</b>分子，比如「PD-1 蛋白」。
+一个抗原上通常有多个不同的表位。<span class="as">≈ 整个对象</span></dd></div>
+
+<div class="gterm" id="t-target"><dt>靶点 <span class="en">target</span></dt>
+<dd>做药时想干预的那个蛋白。在数据里通常就是抗原，
+必须归一到 UniProt 登录号才能当外键用。</dd></div>
+
+<div class="gterm" id="t-epitope"><dt>表位 <span class="en">epitope</span></dt>
+<dd>抗原上<b>真正被抓住的那几个残基</b>。不是整个抗原。
+<span class="as">≈ 对象实际暴露出来的那个接口</span></dd></div>
+
+<div class="gterm" id="t-paratope"><dt>互补位 <span class="en">paratope</span></dt>
+<dd>抗体这一侧实际发生接触的残基，位于 CDR 上。
+<span class="as">≈ 接口的实现方</span></dd></div>
+
+<div class="gterm" id="t-linear-epitope"><dt>线性表位 <span class="en">linear / continuous epitope</span></dt>
+<dd>连续的一段氨基酸，可以直接当子串比对。</dd></div>
+
+<div class="gterm" id="t-conformational"><dt>构象表位 <span class="en">conformational / discontinuous epitope</span></dt>
+<dd>序列上离得很远、<b>折叠后才凑到一起</b>的几个残基。
+<b>只能从三维结构算，而且占大多数。</b>
+所以「从一维序列预测表位」对这一类并不成立。</dd></div>
+
+<div class="gterm" id="t-affinity"><dt>亲和力 <span class="en">affinity</span></dt>
+<dd>抗体和抗原结合的牢固程度，通常用 KD 表示。</dd></div>
+
+<div class="gterm" id="t-kd"><dt>KD / 解离常数 <span class="en">dissociation constant</span></dt>
+<dd>单位 M（摩尔浓度），<b>数值越小结合越强</b>。
+治疗性抗体大致在低 nM（10⁻⁹）到 pM（10⁻¹²）区间。
+关系式 <code>KD = koff / kon</code>。<span class="as">≈ 延迟指标：越小越好，只看数量级</span></dd></div>
+
+<div class="gterm" id="t-kon-koff"><dt>kon / koff（也写作 ka / kd）</dt>
+<dd>结合速率与解离速率。结合越快、脱落越慢，KD 越小。
+只有实时动力学方法（SPR、BLI）能同时给出这两个值。</dd></div>
+
+<div class="gterm" id="t-ddg"><dt>ΔΔG</dt>
+<dd>单点突变造成的结合自由能变化，单位常为 kcal/mol。
+<b>不同数据库对「变强」用正号还是负号约定不一致</b>，
+合并前必须核对符号约定。<span class="as">≈ A/B 测试的 delta</span></dd></div>
+
+<div class="gterm" id="t-spr"><dt>SPR <span class="en">surface plasmon resonance</span></dt>
+<dd>表面等离子共振。实时测结合与解离，同时给 ka / kd / KD。<b>亲和力的金标准。</b></dd></div>
+
+<div class="gterm" id="t-bli"><dt>BLI <span class="en">bio-layer interferometry</span></dt>
+<dd>生物膜干涉。同样是实时动力学方法，同样给 ka / kd / KD，通量高、成本低。</dd></div>
+
+<div class="gterm" id="t-elisa"><dt>ELISA <span class="en">enzyme-linked immunosorbent assay</span></dt>
+<dd>酶联免疫吸附。<b>可以</b>定量测浓度，但在亲和力方向只给 EC50 / IC50 这类
+<b>表观值</b>，受实验条件影响、跨实验室不可直接比较，<b>不是 KD 的来源</b>。</dd></div>
+
+<div class="gterm" id="t-neutralizing"><dt>中和抗体 <span class="en">neutralizing antibody</span></dt>
+<dd>不仅结合、还能阻断目标功能的抗体。「结合」和「中和」是两个不同的标签，
+数据里混用会出问题。</dd></div>
+</dl>
+</section>
+
+<section class="ggroup">
+<h2>格式与标识符</h2>
+<dl>
+
+<div class="gterm" id="t-fasta"><dt>FASTA</dt>
+<dd>最简单的序列文件格式：<code>&gt;</code> 开头一行描述（defline），下面是序列。
+1985 年至今没被取代。<span class="as">≈ 一行 header + 一段 payload</span></dd></div>
+
+<div class="gterm" id="t-pdb"><dt>PDB <span class="en">Protein Data Bank</span></dt>
+<dd>全球蛋白质三维结构的公共库，每个结构一个 4 位编号（如 <code>5B8C</code>）。</dd></div>
+
+<div class="gterm" id="t-chain-id"><dt>链 ID <span class="en">chain ID</span></dt>
+<dd>PDB 结构里每条链的字母标识。<b>没有语义，完全由沉积者自定。</b>
+以为「H 就是重链、L 就是轻链、A 就是抗原」是常见且代价很高的错误——
+<code>5B8C</code> 的重链就是 B/E/H/K、轻链是 A/D/G/J、抗原是 C/F/I/L。</dd></div>
+
+<div class="gterm" id="t-uniprot"><dt>UniProt 登录号 <span class="en">accession</span></dt>
+<dd>蛋白的全球唯一标识，如人 PD-1 是 <code>Q15116</code>。
+<b>靶点必须归一到它</b>，因为名字会撞。<span class="as">≈ 主键 / UUID</span></dd></div>
+
+<div class="gterm" id="t-hgnc"><dt>HGNC</dt>
+<dd>人类基因命名委员会，人类基因符号的权威。
+和 UniProt 是<b>相互独立</b>的两个源，所以适合互相复核——
+但要注意<b>它们对「什么算别名」的记录并不完全一致</b>。</dd></div>
+
+<div class="gterm" id="t-alias"><dt>别名 / CD 号 <span class="en">alias / synonym</span></dt>
+<dd>同一个蛋白的多个名字（PD-1 = PDCD1 = CD279）。
+<b>不同基因之间的别名会互相撞车</b>，所以别名不能当第一路由。
+<span class="as">≈ display name，会变、会撞</span></dd></div>
+
+<div class="gterm" id="t-numbering"><dt>编号体系 <span class="en">numbering scheme</span></dt>
+<dd>让不同长度的抗体可变区能按「结构位置」对齐比较的一套规则。
+<b>常用的不止三套</b>，还有 Martin、AbM、Contact、AHo、North 等。
+<span class="as">≈ 并存的多个 schema 版本</span></dd></div>
+
+<div class="gterm" id="t-imgt"><dt>IMGT</dt>
+<dd>1997 年提出的编号体系，跨物种、跨受体类型通用，<b>目前最主流</b>。</dd></div>
+
+<div class="gterm" id="t-kabat"><dt>Kabat</dt>
+<dd>1970 年代起的最早一套编号，按序列<b>变异度</b>划 CDR。早期文献大量沿用。</dd></div>
+
+<div class="gterm" id="t-chothia"><dt>Chothia</dt>
+<dd>1987 年提出，按<b>结构环</b>的起止划 CDR，做建模时常用。
+<b>注意：Chothia 与 Kabat 对 CDR-H3 的定义是相同的</b>，差别在 H1 / L1。</dd></div>
+
+<div class="gterm" id="t-anarci"><dt>ANARCI</dt>
+<dd>常用的抗体编号工具，能按多种体系给序列编号。
+<b>它是复核你自己 CDR 切法的独立工具</b>。</dd></div>
+
+<div class="gterm" id="t-ambiguity"><dt>模糊码 <span class="en">ambiguity code</span></dt>
+<dd>序列里表示「不确定是哪个残基」的字母，如 <code>X</code>、<code>B</code>、<code>Z</code>。
+真实数据一定有，正确做法是<b>标记出来</b>而不是放宽校验。</dd></div>
+</dl>
+</section>
+
+<section class="ggroup">
+<h2>数据工程与质量</h2>
+<dl>
+
+<div class="gterm" id="t-normalization"><dt>实体归一 <span class="en">entity resolution / normalization</span></dt>
+<dd>把各种写法的名字统一映射到一个稳定主键。这个领域最容易出错的一层。
+<span class="as">≈ 主数据管理</span></dd></div>
+
+<div class="gterm" id="t-cross-source"><dt>交叉源验证 <span class="en">cross-source validation</span></dt>
+<dd>用一个<b>独立</b>的权威源复核另一个源产出的结果，两边一致才算过。
+用产出结果的源检查结果 = 循环论证。
+<span class="as">≈ 不能用被测代码自己的逻辑写断言</span></dd></div>
+
+<div class="gterm" id="t-evidence-tier"><dt>证据分级 <span class="en">evidence tier</span></dt>
+<dd>给每条记录标明「凭什么成立」和强度：结构确证 &gt; 官方靶点 &gt; 策展实验记录 &gt;
+文献/专利声明 &gt; 仅关键词共现（应剔除）。
+<span class="as">≈ 数据血缘 + 置信度分层</span></dd></div>
+
+<div class="gterm" id="t-provenance"><dt>可溯源 <span class="en">provenance / traceability</span></dt>
+<dd>每条记录能指回原始出处，<b>且打开之后内容确实佐证这条关系</b>。
+链接能打开只是最低要求。</dd></div>
+
+<div class="gterm" id="t-qc-flags"><dt>QC 标记 <span class="en">QC flags</span></dt>
+<dd>数据集自带的已知缺陷清单。<b>全是 OK 反而可疑</b>——
+真实策展数据一定有瑕疵。<span class="as">≈ known issues 列表</span></dd></div>
+
+<div class="gterm" id="t-repertoire"><dt>免疫组库 <span class="en">repertoire</span></dt>
+<dd>从个体测序得到的海量抗体序列集合，可达十亿级，
+但<b>不知道每条抓什么</b>。对从头设计任务价值很低，<b>却非常适合用来凑条数</b>。</dd></div>
+
+<div class="gterm" id="t-binding-context"><dt>binding context</dt>
+<dd>「这条抗体序列配的是哪个靶点」这个标签。
+没有它的序列对监督学习是<b>没有 label 的样本</b>。</dd></div>
+
+<div class="gterm" id="t-ai4s"><dt>AI for Science / AI4S</dt>
+<dd>用机器学习方法解决自然科学问题。与通用 AI 最大的区别是
+<b>数据来自真实实验</b>：成本极高、总量极小，所以数据质量常比模型选择更决定成败。</dd></div>
+
+<div class="gterm" id="t-alphafold"><dt>AlphaFold</dt>
+<dd>DeepMind 的蛋白结构预测模型。AlphaFold2 让单体折叠预测达到接近实验精度；
+AlphaFold-Multimer 与 AlphaFold 3 扩展到复合物。
+<b>抗体-抗原界面仍是其中最弱的一类。</b></dd></div>
+
+<div class="gterm" id="t-de-novo"><dt>从头设计 <span class="en">de novo design</span></dt>
+<dd>给定靶点直接生成抗体序列。当前最热的方向，
+也是最依赖「靶点 ↔ 序列」配对数据的方向。</dd></div>
+</dl>
+</section>
+
+<div class="key"><b>没找到你要的词？</b>
+<p>这份表会持续补。缺哪个词
+<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a> 告诉我，
+或者直接发 PR——<a href="https://github.com/Runix-lab/ai4s-for-programmers/blob/main/content/glossary.html" rel="noopener">词条源文件在这里</a>。</p></div>

@@ -1,0 +1,75 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # dist/ is committed so the site deploys with no build step. This is the
+      # only thing keeping that from silently drifting out of date.
+      - name: dist/ is current and lint is clean
+        run: python3 build.py --check
+
+      - name: JavaScript parses
+        run: |
+          node --check assets/site.js
+          node --check assets/quiz.js
+
+      - name: Question bank is intact
+        run: |
+          node -e "
+            const s = require('fs').readFileSync('assets/quiz.js','utf8');
+            const d1 = (s.match(/sec: 's[1-3]'/g)||[]).length;
+            const d2 = (s.match(/sec: 's[5-8]'/g)||[]).length;
+            if (d1 !== 15 || d2 !== 20) {
+              console.error('expected 15 + 20 questions, got ' + d1 + ' + ' + d2);
+              process.exit(1);
+            }
+            console.log('quiz bank: ' + d1 + ' + ' + d2 + ' = ' + (d1+d2));
+          "
+
+  labs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r labs/requirements.txt
+
+      # The offline labs are the ones a learner runs first. If they break, the
+      # course is broken. The two network labs are excluded on purpose: they
+      # query live public APIs and are expected to change over time.
+      - name: Offline labs run clean
+        working-directory: .
+        run: |
+          python labs/lab1_read_one_record.py > /dev/null
+          python labs/lab2_data_checkup.py    > /dev/null
+          python labs/lab3_substring_bug.py   > /dev/null
+          python labs/lab5_compute_epitope.py > /dev/null
+          python labs/lab6_assert_qc.py --offline > /dev/null
+
+      # Guard the two facts the course cites from this dataset by name.
+      - name: Sample dataset still supports the course's claims
+        run: |
+          python - <<'PY'
+          import csv
+          rows = list(csv.DictReader(open("labs/data/sample_antibodies.csv")))
+          same = sum(1 for r in rows if r["CDRH3_Kabat"] == r["CDRH3_Chothia"])
+          not_a = sum(1 for r in rows if r["Antigen_chain"] != "A")
+          assert len(rows) == 29, f"expected 29 rows, got {len(rows)}"
+          assert same == len(rows), f"Kabat==Chothia CDRH3 only {same}/{len(rows)}"
+          assert not_a == 16, f"expected 16 non-A antigen chains, got {not_a}"
+          e = next(r for r in rows if r["PDB"] == "5E2W")
+          assert e["Epitope_str"] == "S202;P203;G204;T205;P206;G207;S208;R209"
+          print(f"ok: {len(rows)} rows, {same} Kabat==Chothia, {not_a} non-A antigen chains")
+          PY

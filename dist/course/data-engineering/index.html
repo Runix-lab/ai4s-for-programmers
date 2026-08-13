@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>生物数据工程的四层能力与五个真实的坑</title>
+<meta name="description" content="要建的不是爬虫，是四层能力：多源接入、实体归一、证据判定、信息抽取。附五个真实踩过的坑，每个都有你熟悉的软件工程对应物。">
+<meta name="keywords" content="生物 数据工程, 实体归一 entity resolution, 数据血缘, ETL 生物数据, 数据 证据分级">
+<link rel="canonical" href="https://ai4s.runixcloud.io/course/data-engineering/">
+<link rel="prev" href="https://ai4s.runixcloud.io/course/what-ai-does/">
+<link rel="next" href="https://ai4s.runixcloud.io/course/falsification/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="生物数据工程的四层能力与五个真实的坑">
+<meta property="og:description" content="要建的不是爬虫，是四层能力：多源接入、实体归一、证据判定、信息抽取。附五个真实踩过的坑，每个都有你熟悉的软件工程对应物。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/course/data-engineering/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/lesson.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="生物数据工程的四层能力与五个真实的坑">
+<meta name="twitter:description" content="要建的不是爬虫，是四层能力：多源接入、实体归一、证据判定、信息抽取。附五个真实踩过的坑，每个都有你熟悉的软件工程对应物。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/lesson.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S6 · 数据工程","item":"https://ai4s.runixcloud.io/course/data-engineering/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/data-engineering/#lesson","name":"数据工程的真实形态","description":"要建的不是爬虫，是四层能力：多源接入、实体归一、证据判定、信息抽取。附五个真实踩过的坑，每个都有你熟悉的软件工程对应物。","url":"https://ai4s.runixcloud.io/course/data-engineering/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT60M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["多源接入与实体归一","证据分级与数据血缘","关键词共现噪声与别名假阳性"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S6 · 数据工程</span></nav>
+<main id="main">
+<header><p class="eyebrow">DAY 2 · S6 · 上午 60 分钟</p><h1>数据工程的真实形态</h1><p class="dek">这一节全部用<b>软件工程的语言</b>讲。</p></header>
+<div class="unit">
+<h2 id="four-layers"><span>U6.1</span>要建的是四层能力，不是一个爬虫</h2>
+<pre><b>① 多源接入层</b>  公开库 · 专利批量 · 文献补充材料
+                 <i>→ 增量、可重放、带缓存（就是普通的 ETL）</i>
+
+<b>② 实体归一层</b>  靶点归一到 UniProt 主键；抗体归一到序列
+                 <i>→ 就是 entity resolution / 主数据管理</i>
+
+<b>③ 证据判定层</b>  这条配对凭什么成立？强度多少？原文在哪句？
+                 <i>→ 数据血缘 + 置信度分层　<u>← 护城河在这一层</u></i>
+
+<b>④ 抽取层</b>      从专利权利要求书、论文正文里抽关系
+                 <i>→ 信息抽取　<u>← 成本大头在这一层</u></i></pre>
+<p>大多数人只做第 ① 层就以为完事了——「我能抓到 N 万条」。
+真正区分供应商的是第 ③ 层：<b>你能不能对每一条说清楚「凭什么」。</b></p>
+<div class="map">
+<div class="l"><b>证据判定层</b><small>每条记录标明证据类型、强度、原文位置</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>data lineage + confidence</b><small>你在数据平台里已经建过的东西</small></div>
+</div>
+<div class="key"><b>证据分级长什么样</b><p>一个可用的分级（数字是示例，重点是<b>分层这件事</b>）：<br>
+<b>L1 结构确证</b>（复合物结构里两个分子真的贴在一起）＞
+<b>L2 上市药物的官方靶点</b>＞
+<b>L3 策展实验记录</b>＞
+<b>L4 专利／文献里的显式声明</b>。<br>
+下面还有一层「<b>仅关键词共现</b>」——<b>应当直接剔除，不交付</b>。<br>
+关键不在于用几级，而在于<b>每条记录都能回答「你凭什么」，且这个回答是可机读的字段</b>。</p></div>
+</div>
+
+<div class="unit">
+<h2 id="five-traps"><span>U6.2</span>五个真实的坑，每个都有编程对应物</h2>
+<p>下面每一条都是真实发生过的，不是教科书举例。
+<b>请特别注意最后一列——你会发现自己其实都见过。</b></p>
+<div class="scroll"><table>
+<thead><tr><th>坑</th><th>发生了什么</th><th>你熟悉的版本</th></tr></thead>
+<tbody>
+<tr><td><b>① 关键词共现噪声</b></td>
+<td>数据库自带的「靶点」字段其实是<b>关键词共现</b>，一条记录能列 100+ 个基因别名。
+用它能「做」出 6 万多条配对；只保留原文有明确声明的之后，剩下约 1.2 万条</td>
+<td class="mono">把 full-text search 的<br>结果当成结构化字段用</td></tr>
+
+<tr><td><b>② 别名子串假阳性</b></td>
+<td>HER2 的别名 <code>neu</code> 裸子串命中了 <b>neu</b>raminidase、<b>neu</b>tralizing；
+PD-1 的<b>基因全名</b>是 PD-L1 基因全名的<b>前缀</b>，两者会同时命中</td>
+<td class="mono">正则没加词边界<br>+ 没做最长匹配消歧</td></tr>
+
+<tr><td><b>③ 主流靶点被归错</b></td>
+<td>CCR4 被另一个基因的同名别名劫持；4-1BB、CD166、OX40 也各自归到了错误条目。
+<b>四个都是主流免疫肿瘤靶点</b></td>
+<td class="mono">外键解析用了<br>会冲突的 alias 做首选路由</td></tr>
+
+<tr><td><b>④ 公开数据源已饱和</b></td>
+<td>再接入一个公开亲和力库（上千行），去重后<b>净增 0 条</b></td>
+<td class="mono">新数据源与旧的<br>完全重叠</td></tr>
+
+<tr><td><b>⑤ 表位编号跨毒株失效</b></td>
+<td>文献说表位在第 541 位是丝氨酸，但参考序列第 541 位不是——
+标注来自另一个毒株／分离株。同一批数据里，
+某些保守蛋白能对上九成以上，超变蛋白只能对上不到一成</td>
+<td class="mono">两份数据用了<br>不同的坐标基准</td></tr>
+</tbody></table></div>
+
+<div class="key"><b>这五个坑的共同点</b><p><b>数据表面完全正常</b>——字段齐、格式对、条数够、每条都有 ID。
+静态看数据永远发现不了，<b>只有主动去证伪才能发现</b>。<br>
+这就是这个领域的技术壁垒：<b>不在「能抓多少」，在「能证明抓对了多少」。</b></p></div>
+
+<div class="trap"><b>第 ④ 条值得单独说：</b>「接了一个新源，净增 0 条」听上去是失败，
+其实是一个<b>有价值的负面结论</b>——它排除了「多接几个公开库就能解决数据稀缺」这条路，
+从而证明了必须走成本高得多的全文抽取。<br>
+<b>能把负面结果当成交付物的团队，和只报正面数字的团队，不是一个层次。</b>
+这条也会出现在 <a href="/course/judgment/">S8</a> 的必问清单里。</div>
+</div>
+
+<div class="unit">
+<h2 id="what-to-build"><span>U6.3</span>如果让你来搭，第一周该干什么</h2>
+<p>把上面翻译成一份实际的开工顺序：</p>
+<ol>
+<li><b>先建归一层，不要先建接入层。</b>没有稳定主键，接得越多越乱。</li>
+<li><b>归一层的第一个功能是「拒绝」。</b>能识别出「这个词我不确定」比全部强行映射重要得多。</li>
+<li><b>每条记录从第一天就带证据字段</b>（来源、证据类型、原文定位）。事后补是补不上的。</li>
+<li><b>质检写成断言，进 CI。</b>不是月度报告，是每次跑完就红绿灯（见 <a href="/course/falsification/#lab6">Lab 6</a>）。</li>
+<li><b>准备一个独立源专门用来复核</b>，且它<b>不参与</b>生产管线（见 <a href="/course/falsification/#lab4">Lab 4</a>）。</li>
+</ol>
+<div class="key"><b>一句话</b><p>这一层的工作量和难度，和你做过的任何一个
+<b>主数据治理</b>项目是同构的。区别只是实体从「用户／商品」换成了「蛋白／抗体」，
+而错一条的代价高得多。</p></div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<div class="quiz" data-bank="d2" data-sec="s6"><h3>S6 · 数据工程</h3></div>
+</section>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/what-ai-does/" rel="prev"><small>上一节</small>S5 · AI 在做什么</a><a class="n" href="/course/falsification/" rel="next"><small>下一节</small>S7 · 质量与证伪</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/quiz.js" defer></script>
+</body>
+</html>

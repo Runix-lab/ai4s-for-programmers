@@ -1,0 +1,87 @@
+<div class="unit">
+<h2 id="alphafold"><span>U5.1</span>分水岭：AlphaFold</h2>
+<p>2020 年之前，测定一个蛋白质的三维结构要在实验室花几个月到几年
+（X 射线晶体学、冷冻电镜）。DeepMind 的 <b>AlphaFold2</b> 让
+「从序列预测单体结构」在大多数情况下达到接近实验的精度，把周期压到分钟级。</p>
+<div class="map">
+<div class="l"><b>AlphaFold 解决的</b><small>给定一条序列，它折成什么形状</small></div>
+<div class="mid">→</div>
+<div class="r"><b>predict(str) -&gt; Structure3D</b><small>单体，已基本可用</small></div>
+</div>
+
+<div class="key"><b>但要精确地记住它的边界（这一段值得慢读）</b>
+<p>AlphaFold<b>2</b> 解决的是<b>单体蛋白怎么折叠</b>。
+之后 <b>AlphaFold-Multimer</b>（2021）和 <b>AlphaFold 3</b>（2024）
+把能力扩展到了复合物，在很多蛋白-蛋白体系上确实已经可用。<br><br>
+<b>但抗体-抗原界面仍是其中最弱的一类。</b>
+AlphaFold 3 原文自己就把抗体-抗原单独拎出来讨论：
+相比 AlphaFold-Multimer v2.3 有显著提升，
+<b>但需要大幅增加采样（上千个 seed）才能拿到好结果</b>——
+这本身就说明它离「稳定可用」还有距离。<br><br>
+根本原因：<b>CDRH3 由基因重组随机产生，没有进化同源信息可借鉴</b>，
+而共进化信号恰恰是这套方法最依赖的东西。<br>
+<b>这就是为什么这个领域至今高度依赖真实实验数据。</b></p></div>
+
+<div class="trap"><b>说法要精确，这本身就是判断力的一部分：</b><br>
+❌ 「AlphaFold 没解决蛋白复合物」——<b>过时</b>了，AF-Multimer 和 AF3 之后不能这么说。<br>
+❌ 「AlphaFold 解决了抗体设计」——<b>错</b>的。<br>
+✅ 「单体折叠基本解决，一般复合物大幅改善，<b>抗体-抗原仍是公认难点</b>。」<br><br>
+能把这句话说准，你在这个话题上的可信度就已经超过大多数人。
+<b>而这门课第一版恰好写成了那个过时的说法</b>——
+一份 2020 年的正确结论，到 2026 年会变成一个显得外行的错误。
+<b>时效性是科学材料的一等公民，不是脚注。</b></div>
+
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=P_fHJIYENdI" target="_blank" rel="noopener">AlphaFold — The Most Useful Thing AI Has Ever Done</a>
+<small>YouTube · Veritasium · <b>如果整个课程你只看一个视频，就看这条。</b>
+顶级科普频道，完全面向外行，可开自动中文字幕。</small></div></div>
+</div>
+
+<div class="unit">
+<h2 id="three-tasks"><span>U5.2</span>三类任务，用函数签名来理解</h2>
+<pre><i># ① 结构预测 —— 单体基本可用，抗体-抗原复合物仍难</i>
+<b>def</b> predict_structure(seq: str) -&gt; Structure3D: ...
+
+<i># ② 亲和力预测 —— 数据太少，跨靶点泛化差</i>
+<b>def</b> predict_affinity(ab: str, ag: str) -&gt; float:   <i># KD 或 ΔΔG</i>
+
+<i># ③ 从头设计 —— 最热，也最需要配对数据</i>
+<b>def</b> design_antibody(target: str) -&gt; list[str]: ...</pre>
+<p>第三个是当下最受关注的方向。它需要大量
+<b>「靶点 ↔ 抗体序列」的成对样本</b>来学这个映射。</p>
+<div class="key"><b>翻译一句常见的验收标准</b><p>行业里常见这句要求：
+<i>「序列不能只是随机抗体库，需要有 binding context」</i>。<br>
+翻译成工程语言就是：<b>没有 label 的样本，对监督学习没用。</b><br>
+一个十亿条序列的免疫组库（repertoire）如果不知道每条抓什么，
+对这个任务的价值接近于零——但它<b>非常适合用来凑条数</b>。
+记住这一条，<a href="/course/judgment/">S8</a> 会用到。</p></div>
+</div>
+
+<div class="unit">
+<h2 id="data-bottleneck"><span>U5.3</span>为什么数据是瓶颈，不是模型</h2>
+<div class="scroll"><table>
+<thead><tr><th></th><th>NLP / CV</th><th>抗体 AI</th></tr></thead>
+<tbody>
+<tr><td>数据获取</td><td>互联网上几乎无限</td><td>每条都来自<b>真实实验</b>或专利披露</td></tr>
+<tr><td>标注成本</td><td>众包即可</td><td>需要领域专家，很多标注本身就要做实验</td></tr>
+<tr><td>数据量级</td><td>万亿 token</td><td><b>抗体-抗原结构复合物只有数千个</b>，高质量定量亲和力只有数百条量级</td></tr>
+<tr><td>脏数据后果</td><td>模型稍差</td><td><b>学到错误的结合规律，静默失效</b></td></tr>
+</tbody></table></div>
+<p>最后一行是这门课存在的理由。在 NLP 里脏数据让指标掉两个点；
+在这里，一批被错误归因的配对会让模型学到一个<b>物理上不存在的规律</b>，
+而且从损失曲线上完全看不出来——因为验证集是用同样的方法造的，
+<b>脏得一模一样</b>。</p>
+<div class="map">
+<div class="l"><b>训练集和验证集用同一条脏管线生成</b><small>指标很好看，模型是错的</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>data leakage</b><small>你已经很熟悉这种失败模式</small></div>
+</div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=6xIHD-SU8OQ" target="_blank" rel="noopener">AI 製藥的護城河：不是大模型，而是「定制化模型」</a>
+<small>YouTube · 制藥漫談 · 中文 · 和上面这张表互为印证</small></div></div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<div class="quiz" data-bank="d2" data-sec="s5"><h3>S5 · AI 在做什么</h3></div>
+</section>

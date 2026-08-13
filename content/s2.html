@@ -1,0 +1,112 @@
+<div class="unit">
+<h2 id="u2-1"><span>U2.1</span>抗原 ≠ 表位（这两个词最容易混）</h2>
+<div class="scroll"><table>
+<thead><tr><th>术语</th><th>是什么</th><th>编程类比</th></tr></thead>
+<tbody>
+<tr><td><b>抗原</b> antigen</td><td>被抓的<b>整个</b>分子，比如「PD-1 蛋白」</td><td class="mono">整个对象</td></tr>
+<tr><td><b>表位</b> epitope</td><td>抗原上<b>真正被抓住的那几个残基</b></td><td class="mono">对象暴露的那个接口</td></tr>
+<tr><td><b>互补位</b> paratope</td><td>抗体这一侧实际接触的残基（在 CDR 上）</td><td class="mono">接口的实现方</td></tr>
+</tbody></table></div>
+<p>一个抗原分子上通常有<b>多个</b>不同的表位，可以被不同的抗体分别识别。
+所以「A 抗体和 B 抗体都抓 PD-1」并不意味着它们抓的是同一个地方——
+这个区别在药物竞争分析里非常要紧。</p>
+
+<h3 id="linear-vs-conformational">线性表位 vs 构象表位</h3>
+<p>表位分两种，这个区分是本节最有价值的一条：</p>
+<div class="scroll"><table>
+<thead><tr><th>类型</th><th>定义</th><th>能否从一维序列拿到</th></tr></thead>
+<tbody>
+<tr><td><b>线性表位</b><br>linear / continuous</td>
+<td>连续的一段氨基酸</td>
+<td>能，可以直接当子串比对</td></tr>
+<tr><td><b>构象表位</b><br>conformational</td>
+<td>序列上离得很远、<b>折叠后才凑到一起</b>的几个残基</td>
+<td><b>不能</b>，只能从三维结构算，<b>而且占大多数</b></td></tr>
+</tbody></table></div>
+<div class="trap"><b>判断力训练：</b>如果有人说「我们从一维序列预测表位」，
+你立刻应该想到——构象表位的信息<b>根本不在一维序列里</b>。
+这句话要么是简化表述（其实用了结构预测），要么说话的人不懂。
+<b>这是你能问出的第一个让对方露底的问题。</b></div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1YV411t7xB" target="_blank" rel="noopener">抗原表位及其分类</a>
+<small>B 站 · 6:45 · 讲清一个抗原上有很多表位、线性 vs 构象、功能性 vs 隐蔽表位</small></div></div>
+</div>
+
+<div class="unit">
+<h2 id="u2-2"><span>U2.2</span>KD：结合强度，像读延迟指标一样读它</h2>
+<div class="map">
+<div class="l"><b>KD 解离常数</b><small>单位 M（摩尔浓度），数值越小结合越牢</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>p99 延迟</b><small>越小越好，且只看数量级不看绝对值</small></div>
+</div>
+<pre>10⁻³  mM  毫摩尔   <i>几乎没结合</i>
+10⁻⁶  μM  微摩尔   <i>弱</i>
+<b>10⁻⁹  nM  纳摩尔   ← 治疗性抗体常见范围的上沿</b>
+<b>10⁻¹² pM  皮摩尔   ← 很强；不少上市大品种报在这一带</b>
+10⁻¹⁵ fM  飞摩尔   <i>极罕见</i></pre>
+<p style="font-size:13.5px;color:var(--mut)">治疗性抗体大致落在<b>低 nM 到 pM</b> 这个区间。
+更精确的分布因适应症和测定方法而异，<b>看到具体数字先看它是用什么方法测的</b>
+（见下一小节）——这比记住一个「典型值」有用得多。</p>
+<p>关系式：<code>KD = koff / kon</code>。<b>kon</b> 是结合速率，<b>koff</b> 是解离速率。
+结合越快（kon 大）、脱落越慢（koff 小），KD 越小、结合越牢。</p>
+<div class="key"><b>建立这个条件反射就够了</b><p>看到 <code>KD_M = 1e-11</code>，
+心里直接翻译成「10 皮摩尔，很强」。看到 <code>2e-6</code>，翻译成「2 微摩尔，偏弱」。<br>
+再多一步：<b>看到没写单位的 KD 数字，先问单位。</b>
+同一份表里混着 M 和 nM 是真实存在的数据事故，差 9 个数量级。</p></div>
+<div class="trap"><b>不是越强越好：</b>直觉上 KD 越小越好，但实际做药时并非如此——
+结合太牢可能导致组织穿透差、脱靶毒性大。<b>「最优亲和力」是个区间不是极值。</b>
+所以别把 KD 当成单调的质量分去给数据排序。</div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=3UHJ9gnpqB0" target="_blank" rel="noopener">Kd, the Dissociation Constant: What is it?</a>
+<small>YouTube · Catalyst University · 英文，专讲 KD 一个概念</small></div></div>
+</div>
+
+<div class="unit">
+<h2 id="u2-3"><span>U2.3</span>三种测量方法 = 三种可信度</h2>
+<div class="scroll"><table>
+<thead><tr><th>方法</th><th>怎么测</th><th>给什么</th><th>可信度</th></tr></thead>
+<tbody>
+<tr><td><b>SPR</b><br>表面等离子共振</td><td>靶点固定在芯片上，抗体流过，光学信号实时看结合与脱落</td>
+<td>KD + kon + koff</td><td><b>金标准</b></td></tr>
+<tr><td><b>BLI</b><br>生物膜干涉</td><td>原理类似，用探针而非流通池</td>
+<td>同样是实时动力学：<b>ka + kd + KD</b></td>
+<td>快而便宜，通量高</td></tr>
+<tr><td><b>ELISA</b><br>酶联免疫吸附</td><td>酶显色，看颜色深浅</td>
+<td>可定量测<b>浓度</b>；亲和力方向只给 <b>EC50 / IC50</b> 这类<b>表观值</b></td>
+<td><b>不是 KD 的来源</b></td></tr>
+</tbody></table></div>
+<div class="trap"><b>关于 ELISA 要说准，这本身就是一次判断力训练：</b>
+说「ELISA 是定性的」不准确——它<b>可以</b>做定量，标准曲线法测蛋白浓度是它的日常工作。<br>
+准确的说法是：<b>ELISA 给不出真正的 KD 和结合动力学</b>，
+它给的 EC50／IC50 是<b>表观</b>亲和力，受包被密度、孵育时间、二抗等实验条件影响，
+<b>不同实验室之间不可直接比较</b>。<br>
+所以问题不在于「定性还是定量」，在于<b>这个数字能不能和 SPR 的 KD 放进同一列</b>。
+答案是不能。</div>
+<div class="trap"><b>由此产生一个常见的忽悠点：</b>
+把 ELISA 的表观值和 SPR 的定量 KD 混在一起，报成「结合数据 X 条」。<br>
+真实案例：某份数据的亲和力表有 <b>8,622 行</b>，但按方法拆开之后，
+<b>真正的定量 KD 只有 49 行</b>。诚实的做法是<b>按证据强度分列</b>，而不是报一个大数。<br>
+→ 这条会在 <a href="/course/judgment/#ten-questions">S8 的十个必问问题</a> 里变成你的第 7 问。</div>
+</div>
+
+<div class="unit">
+<h2 id="u2-4"><span>U2.4</span>ΔΔG：突变让结合变强还是变弱</h2>
+<p>还有一类数据你会遇到：<b>ΔΔG</b>（读作 delta-delta-G），
+表示「把某个残基换成另一个之后，结合自由能变化了多少」，单位通常是 kcal/mol。</p>
+<div class="map">
+<div class="l"><b>ΔΔG</b><small>单点突变造成的结合强度变化</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>A/B 测试的 delta</b><small>基线 vs 改动后的差值，而非绝对值</small></div>
+</div>
+<div class="trap"><b>符号约定是个真实的坑：</b>不同数据库对「变强」用正号还是负号
+<b>约定不一致</b>。合并两个来源的 ΔΔG 数据而不核对符号约定，
+会得到一份系统性反号的训练集——<b>而且它看起来完全正常</b>。
+这是「两份数据用了不同基准」这类 bug 的又一个实例，
+和 <a href="/course/data-engineering/">S6</a> 里的毒株编号问题同源。</div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<p class="sub">四道题。第三题是本节最值钱的一条。</p>
+<div class="quiz" data-bank="d1" data-sec="s2"><h3>S2 · 结合与亲和力</h3></div>
+</section>

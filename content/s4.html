@@ -1,0 +1,50 @@
+<p>今天学的三节全是概念。这一节把它们落到真实数据上——
+<b>如果你能在一条真实记录里逐个指出 S1–S3 的每个概念，Day 1 就算过了。</b></p>
+
+<div class="lab">
+<h2 id="lab1">LAB 1 · 打开一条真实记录</h2>
+<pre>$ python labs/lab1_read_one_record.py</pre>
+<p>脚本会打印一条抗体记录的<b>所有字段</b>：VH／VL 序列、三套编号下的 CDR、
+PDB 号与链标识、表位残基、溯源链接。</p>
+<p><b>你要做的事：对照 S1–S3 的每个概念，逐个在输出里找到它。</b>
+找不到的概念就回去重看那一段。</p>
+<p style="color:var(--mut);font-size:13.5px">重点看这三处：<br>
+① <code>IMGT / Kabat / Chothia</code> 三行 —— 同一条序列，三套编号切出的 CDR 完全不同（<a href="/course/formats-and-ids/#numbering">S3.2</a>）<br>
+② <code>VH_sequence</code> vs <code>VH_full_chain</code> —— 切掉恒定区前后的差别（<a href="/course/protein-as-string/#u1-3">S1.3</a>）<br>
+③ <code>Epitope</code> 那一列 —— 一串残基编号，Day 2 你会亲手把它算出来</p>
+</div>
+
+<div class="lab">
+<h2 id="lab2">LAB 2 · 给数据做体检</h2>
+<pre>$ python labs/lab2_data_checkup.py</pre>
+<p>这就是 <code>SELECT COUNT(*) ... GROUP BY</code>，只不过字段名是生物术语。
+它回答四个问题，每个都对应你已经会问的一个数据库问题：</p>
+<div class="scroll"><table>
+<thead><tr><th>体检项</th><th>你熟悉的版本</th><th>为什么要看</th></tr></thead>
+<tbody>
+<tr><td>总行数 / 独立靶点数</td><td class="mono">COUNT(*) / COUNT(DISTINCT fk)</td>
+<td>外键基数太低 = 数据集中在少数几个靶点上，泛化会很差</td></tr>
+<tr><td>按证据等级分层</td><td class="mono">GROUP BY confidence_tier</td>
+<td><b>最重要的一项</b>。总数好看但全堆在最低等级，等于没有</td></tr>
+<tr><td>各字段填充率</td><td class="mono">COUNT(col) / COUNT(*)</td>
+<td>关键列（如表位）填充率通常远低于你的预期，先知道再规划</td></tr>
+<tr><td>QC 标记分布</td><td class="mono">GROUP BY qc_flag</td>
+<td>真实数据一定有瑕疵。全是 OK 反而说明质检没做到位</td></tr>
+</tbody></table></div>
+<div class="key"><b>这一步要养成的习惯</b><p>拿到任何一份陌生数据，
+<b>先做这四项再看内容</b>。它们花不了五分钟，
+但能立刻告诉你这份数据是「有 3 万行」还是「有 3 万行其中 2.4 万行没有可用标签」。</p></div>
+</div>
+
+<div class="key"><b>Day 1 收尾：花 2 分钟做这件事</b>
+<p>打开 <a href="https://www.rcsb.org/3d-view/5B8C" target="_blank" rel="noopener">rcsb.org/3d-view/5B8C</a>
+（人 PD-1 与一个抗体的真实复合物），用鼠标转一转，
+找到抗体尖端贴在 PD-1 上的那个地方。<br>
+<b>那里就是表位和互补位。</b>这 2 分钟比读十页文字管用——
+概念从此就有了实物对应。</p></div>
+
+<section>
+<h2>Day 1 检验</h2>
+<p class="sub">15 题，覆盖 S1–S3。12 题以上可以进 Day 2；不到 10 题建议回头重看。</p>
+<div class="quiz" data-bank="d1"><h3>DAY 1 · 共 15 题</h3></div>
+</section>

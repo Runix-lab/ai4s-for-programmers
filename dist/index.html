@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI4S for Programmers · 程序员的 AI for Science 入门</title>
+<meta name="description" content="零生物背景的程序员两天入门 AI for Science：所有生物概念映射到你已经懂的编程概念，配 6 个可运行实验和 35 道检验题。免费开源。">
+<meta name="keywords" content="AI for Science 入门, AI4S, 程序员 转 AI 制药, 抗体 数据, 生物信息学 入门, AI4S 教程">
+<link rel="canonical" href="https://ai4s.runixcloud.io/">
+<link rel="alternate" hreflang="zh-Hans" href="https://ai4s.runixcloud.io/">
+<link rel="alternate" hreflang="en" href="https://ai4s.runixcloud.io/en/">
+<link rel="alternate" hreflang="x-default" href="https://ai4s.runixcloud.io/en/">
+<link rel="next" href="https://ai4s.runixcloud.io/course/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="AI4S for Programmers · 程序员的 AI for Science 入门">
+<meta property="og:description" content="零生物背景的程序员两天入门 AI for Science：所有生物概念映射到你已经懂的编程概念，配 6 个可运行实验和 35 道检验题。免费开源。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/default.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI4S for Programmers · 程序员的 AI for Science 入门">
+<meta name="twitter:description" content="零生物背景的程序员两天入门 AI for Science：所有生物概念映射到你已经懂的编程概念，配 6 个可运行实验和 35 道检验题。免费开源。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/default.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"}]},{"@type":"Course","@id":"https://ai4s.runixcloud.io/#course","name":"抗体数据 × AI for Science · 程序员两天速成营","description":"零生物背景的程序员两天入门 AI for Science：所有生物概念映射到你已经懂的编程概念，配 6 个可运行实验和 35 道检验题。免费开源。","url":"https://ai4s.runixcloud.io/","inLanguage":"zh-CN","isAccessibleForFree":true,"teaches":["蛋白质序列与抗体结构的数据表示","抗原、表位、互补位与亲和力 KD 的读法","IMGT / Kabat / Chothia 三套抗体编号体系的差异","生物数据的实体归一与交叉源验证","AI for Science 中数据质量的证伪方法"],"educationalLevel":"Beginner","provider":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD","category":"Free","availability":"https://schema.org/InStock"},"hasCourseInstance":{"@type":"CourseInstance","courseMode":"online","courseWorkload":"PT10H","inLanguage":"zh-CN"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"什么是 AI for Science（AI4S）？","acceptedAnswer":{"@type":"Answer","text":"AI for Science 指用机器学习方法解决自然科学问题，例如从蛋白质序列预测三维结构、预测分子间结合强度、或从头设计蛋白质。它和通用 AI 最大的区别是数据来自真实实验，获取成本极高、总量极小，所以数据质量往往比模型选择更决定成败。"}},{"@type":"Question","name":"没有生物学基础的程序员能学吗？","acceptedAnswer":{"@type":"Answer","text":"可以。这门课的设计前提就是零生物背景。所有生物概念都先映射到一个你已经熟悉的编程概念——蛋白质序列是字符串、UniProt 登录号是主键、抗体编号体系是并存的 schema 版本——再讲它在生物上的含义。只要会写 Python 就能跟完。"}},{"@type":"Question","name":"学完能做什么？","acceptedAnswer":{"@type":"Answer","text":"能读懂一份抗原-抗体数据集的每一列、能判断一份数据是否可信、能在 5 分钟内对这类项目做出初步判断并问出关键问题。它的目标是判断力，不是让你自己去建模。"}},{"@type":"Question","name":"课程要花多少钱？","acceptedAnswer":{"@type":"Answer","text":"免费。全部内容和 6 个实验的源码都在 GitHub 上以 CC BY-SA 4.0 / MIT 开放。"}}]},{"@type":"WebSite","@id":"https://ai4s.runixcloud.io/#website","name":"AI4S for Programmers","url":"https://ai4s.runixcloud.io/","inLanguage":"zh-CN","publisher":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+
+<main id="main">
+<header><p class="eyebrow">免费 · 开源 · 无需生物背景</p><h1>程序员两天学会看懂<br>AI for Science 的数据</h1><p class="dek">不讲生物学，讲<b>数据</b>。抗体是 4 条字符串组成的对象，靶点归一化是外键解析，数据质检是写断言——这个领域的每个问题，你都在软件工程里见过。</p><div class="badges"><span class="badge"><b>2 天 · 8 节</b></span><span class="badge"><b>6 个</b>可运行实验</span><span class="badge"><b>35 道</b>检验题</span><span class="badge">前置：<b>会写 Python</b></span><span class="badge">生物基础：<b>零</b></span></div></header>
+<!-- ═══════════ 交流视频 ═══════════ -->
+<section>
+<h2>先看这段：5 分钟讲清这门课在讲什么</h2>
+<p class="sub">如果你只有五分钟，看完这段就知道这门课值不值得学下去。</p>
+
+<div class="embed" id="intro-video">
+  <div class="embed-ph">
+    <div class="play" aria-hidden="true">▶</div>
+    <b>入门交流视频 · 即将上线</b>
+    <small>录制中。在它上线之前，先看这条替代品：
+    <a href="https://www.youtube.com/watch?v=P_fHJIYENdI" target="_blank" rel="noopener">Veritasium《AlphaFold — The Most Useful Thing AI Has Ever Done》</a>
+    —— 全网最好的 AI for Science 外行入门，可开自动中文字幕。</small>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════ 核心论点 ═══════════ -->
+<section>
+<h2>这门课的全部主张，就是下面这张表</h2>
+<p class="sub">生物概念难，不是因为它复杂，是因为讲的人默认你有背景。
+把它翻译成你已经懂的东西，难度就塌了。</p>
+
+<div class="scroll"><table>
+<caption class="sr-only">生物概念与编程概念对照表</caption>
+<thead><tr><th>生物侧</th><th>你已经懂的东西</th><th>对应关系为什么成立</th></tr></thead>
+<tbody>
+<tr><td><b>蛋白质序列</b></td><td class="mono">string</td><td>真的就是个字符串，字符集只有 20 个字母</td></tr>
+<tr><td><b>抗体</b></td><td class="mono">4 条 string 组成的复合对象</td><td>2 重链 + 2 轻链</td></tr>
+<tr><td><b>可变区 / 恒定区</b></td><td class="mono">实例字段 / 类的公共部分</td><td>可变区每个都不同，恒定区同类共享</td></tr>
+<tr><td><b>CDR</b></td><td class="mono">决定行为的那几个关键子串</td><td>6 段，占比很小但决定「抓谁」</td></tr>
+<tr><td><b>KD 亲和力</b></td><td class="mono">float，对数刻度，越小越好</td><td>像读 p99 延迟：只看数量级</td></tr>
+<tr><td><b>UniProt 登录号</b></td><td class="mono">主键 / UUID</td><td>全球唯一且稳定</td></tr>
+<tr><td><b>蛋白别名 / CD 号</b></td><td class="mono">alias，<u>会撞</u></td><td>PD-1=PDCD1=CD279；而 CCR4 同时是<b>另一个基因的别名</b></td></tr>
+<tr><td><b>IMGT / Kabat / Chothia</b></td><td class="mono">三套并存的 schema 版本</td><td>历史债，切出的字段边界不同</td></tr>
+<tr><td><b>序列级去重</b></td><td class="mono">按内容 hash 去重</td><td>名字会变，内容不会</td></tr>
+<tr><td><b>证据分级</b></td><td class="mono">数据血缘 + 置信度分层</td><td>每条记录标明「凭什么」</td></tr>
+<tr><td><b>交叉源验证</b></td><td class="mono">不能自证，要用独立源</td><td>用产出结果的源检查结果 = 循环论证</td></tr>
+<tr><td><b>QC_flags</b></td><td class="mono">已知缺陷清单</td><td>全 OK 反而可疑</td></tr>
+</tbody></table></div>
+
+<div class="key"><b>一句话</b><p>这个领域的所有数据问题，你都在软件工程里见过。
+<b>缺的不是能力，是词汇表。</b>完整版对照表在<a href="/glossary/">术语表</a>。</p></div>
+</section>
+
+<!-- ═══════════ 课程结构 ═══════════ -->
+<section>
+<h2>两天，八节课</h2>
+<p class="sub">Day 1 建立概念骨架，Day 2 建立判断力。每节都配可运行实验和当堂自测。</p>
+
+<div class="grid">
+<a class="cardlink" href="/course/protein-as-string/">
+  <em>DAY 1 · S1 · 90 min</em><b>分子的「数据类型」</b>
+  <span>蛋白质就是字符串，抗体是 4 条链的复合对象，CDR 是决定行为的关键子串。</span>
+  <span class="meta">5 道自测</span></a>
+<a class="cardlink" href="/course/binding-and-affinity/">
+  <em>DAY 1 · S2 · 60 min</em><b>「结合」就是两个对象的匹配</b>
+  <span>抗原 ≠ 表位 ≠ 互补位；KD 怎么读；三种测量方法对应三种可信度。</span>
+  <span class="meta">4 道自测</span></a>
+<a class="cardlink" href="/course/formats-and-ids/">
+  <em>DAY 1 · S3 · 90 min</em><b>数据格式与标识符</b>
+  <span>FASTA、PDB、UniProt 登录号，以及三套编号体系为什么切出不同的 CDR。</span>
+  <span class="meta">6 道自测</span></a>
+<a class="cardlink" href="/course/hands-on-day1/">
+  <em>DAY 1 · S4 · 60 min</em><b>动手：把今天学的跑一遍</b>
+  <span>打开一条真实记录逐字段对照概念，再给整份数据做一次体检。</span>
+  <span class="meta">Lab 1 · Lab 2</span></a>
+<a class="cardlink" href="/course/what-ai-does/">
+  <em>DAY 2 · S5 · 60 min</em><b>AI for Science 在这里做什么</b>
+  <span>AlphaFold 解决了什么、没解决什么；三类任务的函数签名；为什么数据是瓶颈。</span>
+  <span class="meta">3 道自测</span></a>
+<a class="cardlink" href="/course/data-engineering/">
+  <em>DAY 2 · S6 · 60 min</em><b>数据工程的真实形态</b>
+  <span>要建的是四层能力不是爬虫。五个真实的坑，每个都有编程对应物。</span>
+  <span class="meta">5 道自测</span></a>
+<a class="cardlink" href="/course/falsification/">
+  <em>DAY 2 · S7 · 90 min</em><b>质量与证伪 ★ 全课核心</b>
+  <span>四个实验让你亲手把 bug 跑出来。这一节是判断力的来源。</span>
+  <span class="meta">Lab 3–6 · 6 道自测</span></a>
+<a class="cardlink" href="/course/judgment/">
+  <em>DAY 2 · S8 · 60 min</em><b>判定与商业</b>
+  <span>三维验收、十个必问问题、五分钟抽查法、红旗清单。抄走就能用。</span>
+  <span class="meta">6 道自测</span></a>
+</div>
+
+<div class="trap"><b>时间不够怎么办：</b>只做 <a href="/course/falsification/">S7</a> 和
+<a href="/course/judgment/">S8</a>。那两节是判断力的来源，
+前面的概念不懂可以随时回<a href="/glossary/">术语表</a>查。</div>
+</section>
+
+<!-- ═══════════ 差异化 ═══════════ -->
+<section>
+<h2>和别的入门材料有什么不同</h2>
+
+<div class="unit">
+<h3>① 讲的是踩过的坑，不是教科书结论</h3>
+<p>课程里的每个例子都来自一次真实的数据工程踩坑，而不是从综述里抄的。
+比如这一条——同一批原始数据，用朴素方法能「做」出六万多条配对，
+<b>其中八成经不起推敲</b>：</p>
+<div class="scroll"><table>
+<thead><tr><th>坑</th><th>发生了什么</th><th>你熟悉的版本</th></tr></thead>
+<tbody>
+<tr><td><b>关键词共现噪声</b></td><td>数据库自带的「靶点」字段其实是关键词共现，一条记录能列 100+ 个基因别名</td>
+<td class="mono">把 full-text search 的<br>结果当成结构化字段用</td></tr>
+<tr><td><b>别名子串假阳性</b></td><td>HER2 的别名 <code>neu</code> 命中了 <b>neu</b>raminidase；PD-1 的<b>基因全名</b>是 PD-L1 基因全名的<b>前缀</b></td>
+<td class="mono">正则没加 \b 词边界<br>+ 没做最长匹配消歧</td></tr>
+<tr><td><b>主流靶点被归错</b></td><td>CCR4 被另一个基因的同名别名劫持，而它本身是一个真实药物靶点</td>
+<td class="mono">外键解析用了<br>会冲突的 alias</td></tr>
+</tbody></table></div>
+<p><b>这三个坑的共同点：数据表面完全正常</b>——字段齐、格式对、条数够。
+只有主动去证伪才能发现。<a href="/course/falsification/">S7</a> 会让你把每一个都亲手跑出来。</p>
+</div>
+
+<div class="unit">
+<h3>② 每个概念都配一个能跑的实验</h3>
+<p>不是伪代码，是六个可以直接 <code>python labs/xxx.py</code> 的脚本。
+比如 Lab 4 会同时问 HGNC 和 UniProt 同一个问题，把冲突现场打出来：</p>
+<pre>输入     HGNC      UniProt-A 朴素                      UniProt-B 严谨
+CCR4   CCR4      CCR4 P51679 [Homo sapiens]        <u>NOCT Q9UK39</u>      <i>← 别名劫持</i>
+HER2   ERBB2     <u>GTF1 P53260 [Saccharomyces]</u>     ERBB2 P04626     <i>← 跨物种泄漏</i>
+PD-1   PDCD1     PD-1 Q9UMF3 [Homo sapiens]        (查不到)
+OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>← 兔子同源</i></pre>
+<p>两种查法都「合理」，却<b>以不同方式翻车</b>——一种把 HER2 认成酵母基因，
+另一种把 CCR4 认成另一个蛋白。跑完这个实验，
+「不能自证」就不再是一句方法论口号，而是你亲眼见过的一次翻车。
+→ <a href="/labs/">全部 6 个实验</a></p>
+</div>
+
+<div class="unit">
+<h3>③ 目标是判断力，不是让你去建模</h3>
+<p>这门课不教你训模型。它要解决的是另一个更常见的问题：
+<b>当有人拿着一份科学数据集或一个 AI4S 项目来找你，你怎么判断真假好坏。</b></p>
+<p>学完你应该能在 5 分钟内做出初步判断，并问出三个让对方答不上来的问题。
+<a href="/course/judgment/">S8</a> 直接给你那份清单。</p>
+</div>
+</section>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<section>
+<h2>常见问题</h2>
+
+<div class="unit">
+<h3>什么是 AI for Science（AI4S）？</h3>
+<p>用机器学习方法解决自然科学问题：从蛋白质序列预测三维结构、预测分子间结合强度、
+从头设计蛋白质，等等。它和通用 AI 最大的区别是——<b>数据来自真实实验</b>，
+获取成本极高、总量极小。所以在这个领域，数据质量往往比模型选择更决定成败。</p>
+</div>
+
+<div class="unit">
+<h3>没有生物学基础的程序员能学吗？</h3>
+<p>可以，这门课的设计前提就是零生物背景。所有生物概念都先映射到一个你已经熟悉的编程概念，
+再讲它在生物上的含义。<b>只要会写 Python 就能跟完。</b></p>
+</div>
+
+<div class="unit">
+<h3>学完能做什么？</h3>
+<p>能读懂一份抗原-抗体数据集的每一列、能判断一份数据是否可信、
+能对这类项目做出初步判断并问出关键问题。<b>它的目标是判断力，不是让你自己去建模。</b></p>
+</div>
+
+<div class="unit">
+<h3>课程要花多少钱？</h3>
+<p>免费。全部内容和 6 个实验的源码都在
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub</a> 上开放，
+内容 CC BY-SA 4.0，代码 MIT。发现错误欢迎提 issue。</p>
+</div>
+</section>
+
+<section>
+<h2>从这里开始</h2>
+<div class="grid">
+<a class="cardlink" href="/course/"><em>推荐路径</em><b>从课程总览开始 →</b>
+<span>看一眼两天的完整安排，再决定从哪节切入。</span></a>
+<a class="cardlink" href="/course/falsification/"><em>只有一小时</em><b>直接跳到 S7 证伪 →</b>
+<span>全课最核心的一节，判断力的来源。</span></a>
+<a class="cardlink" href="/glossary/"><em>随查随用</em><b>术语表 →</b>
+<span>45 个词条，每条一句人话 + 一个编程类比。</span></a>
+</div>
+</section>
+<nav class="pager" aria-label="课程翻页"><span></span><a class="n" href="/course/" rel="next"><small>下一节</small>课程总览</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="AI4S">
+  <!-- Two halves, indigo and green: the biology side and the code side, which is
+       the one idea the whole course is built on. -->
+  <rect width="64" height="64" rx="14" fill="#2e3f8c"/>
+  <path d="M32 0h18a14 14 0 0 1 14 14v36a14 14 0 0 1-14 14H32z" fill="#1c6b58"/>
+  <path d="M20 44 L26 20 L32 44 M22.5 36 h7" stroke="#fff" stroke-width="3.4"
+        fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M44 22 v20" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/>
+</svg>

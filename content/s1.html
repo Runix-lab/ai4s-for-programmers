@@ -1,0 +1,96 @@
+<div class="unit">
+<h2 id="u1-1"><span>U1.1</span>蛋白质就是字符串</h2>
+<div class="map">
+<div class="l"><b>蛋白质</b><small>一串氨基酸连成的链，会自己折叠成三维形状</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>str</b><small>字符集只有 20 个字母，但排列组合决定功能</small></div>
+</div>
+<p>标准氨基酸只有 20 种，每种用一个大写字母表示。所以一个蛋白质可以完整地写成
+<code>DVQLQESGPGLVKPSQ...</code>——这就是<b>序列</b>，是这个领域一切数据的基础形态。</p>
+<p>字符串本身是「软」的：它会<b>折叠</b>成一个特定的三维形状，而<b>形状决定功能</b>。
+两条序列只差几个字母，折出来的形状可能完全不同，功能也就完全不同。</p>
+<div class="key"><b>记住这一条</b><p>序列（一维字符串）→ 折叠 → 结构（三维形状）→ 功能。
+这条链路是整个结构生物学的主线，也是 AI 在这个领域切入的地方
+（见 <a href="/course/what-ai-does/">S5</a>）。</p></div>
+<div class="trap"><b>工程上第一个会咬你的细节：</b>真实数据里的序列不全是那 20 个字母。
+你还会遇到 <code>X</code>（未知残基）、<code>B</code>／<code>Z</code>（两种可能之一）等
+<b>模糊码</b>。写校验时如果把字符集写死成 20 个字母，
+真实数据会当场把你的断言打挂——而正确做法不是放宽断言，是<b>把这些行标记出来</b>。</div>
+</div>
+
+<div class="unit">
+<h2 id="u1-2"><span>U1.2</span>抗体：一个由 4 条链组成的复合对象</h2>
+<p>最常见的抗体（IgG 单体）长成 Y 形，由 <b>2 条重链</b>（长，heavy chain）
++ <b>2 条轻链</b>（短，light chain）组成。
+Y 的两个尖端负责识别目标，下半部分负责「抓到之后叫谁来处理」。</p>
+<p style="font-size:13.5px;color:var(--mut)">严格说「2+2」只对 IgG 这类单体成立：
+分泌型 IgM 是五聚体、分泌型 IgA 常是二聚体。
+做抗体数据时你遇到的绝大多数是 IgG 形态，<b>但知道有例外，
+比事后被人纠正要好</b>。</p>
+<pre><i># 抗体在数据里的最小可用表示</i>
+<b>class</b> Antibody:
+    VH: str   <i># 重链可变区 —— 决定抓谁</i>
+    VL: str   <i># 轻链可变区 —— 决定抓谁</i>
+    <i># 恒定区 CH / CL 通常不进模型：同类抗体几乎完全一样</i></pre>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1wx411e7XX/" target="_blank" rel="noopener">【3D 演示】抗体的结构和应用</a>
+<small>B 站 · 19:07 · 有中文字幕 —— 看完这条你就能看懂任何抗体示意图。这是今天最值得看的视频。</small></div></div>
+<div class="trap"><b>特例要现在就记住：</b>有一类<b>单域抗体</b>只有重链、没有轻链。
+个头小、好改造，是当前热门方向。<br><br>
+它其实是两个来源不同的家族，<b>别混为一谈</b>：
+<b>VHH（纳米抗体）</b>来自<b>骆驼科动物</b>（羊驼、骆驼、美洲驼）；
+<b>VNAR</b> 来自<b>鲨鱼</b>的 IgNAR，是独立演化出来的另一套东西。
+「VHH 来自羊驼和鲨鱼」是一个流传很广的说法，<b>它是错的</b>。<br><br>
+工程上的影响：代码里判断「有没有轻链」时不能想当然，
+<code>if not vl: raise</code> 会把一整类合法数据判死。
+真实数据集里这一类的占比通常是个位数百分比，
+<b>刚好大到不能忽略、小到容易被忽略</b>。</div>
+</div>
+
+<div class="unit">
+<h2 id="u1-3"><span>U1.3</span>可变区 vs 恒定区 = 实例字段 vs 类公共部分</h2>
+<div class="map">
+<div class="l"><b>可变区 VH / VL</b><small>Y 的两个尖端，每个抗体都不同，决定「抓谁」</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>instance fields</b><small>携带全部区分信息</small></div>
+</div>
+<div class="map">
+<div class="l"><b>恒定区 CH / CL</b><small>Y 的下半部分，同类抗体几乎完全一样</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>类的公共部分</b><small>对区分实例毫无信息量</small></div>
+</div>
+<p>所以做数据时要<b>切掉恒定区，只留可变区</b>——留着就是噪声，
+还会让模型把注意力浪费在无区分度的部分上。
+一份规范的数据集通常会同时给你切好的可变区和原始全长链，后者留着供复核。</p>
+<div class="trap"><b>工程细节：</b>「切可变区」不是按固定长度截断——不同抗体的可变区长度本来就不一样
+（110 到 130 个残基都常见）。实际做法是<b>与种系基因比对</b>找到边界，
+由专门的工具完成。这就引出了下一节最重要的概念：<b>编号系统</b>
+（见 <a href="/course/formats-and-ids/">S3</a>）。</div>
+</div>
+
+<div class="unit">
+<h2 id="u1-4"><span>U1.4</span>CDR：真正干活的 6 个子串</h2>
+<p>可变区里也不是每个位置都重要。真正伸出去接触目标的是 <b>6 个环</b>，叫 <b>CDR</b>
+（complementarity-determining region，互补决定区）：
+重链 3 个（CDRH1／H2／H3）、轻链 3 个（CDRL1／L2／L3）。
+其中 <b>CDRH3 最关键</b>——最长、变化最大，是特异性的主要来源。</p>
+<div class="map">
+<div class="l"><b>CDRH3</b><small>由基因重组随机拼接产生，几乎每个抗体都不同</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>天然主键</b><small>所以去重、聚类都以它为轴</small></div>
+</div>
+<p>剩下的部分叫<b>框架区</b>（framework），起支撑作用，序列上保守得多。
+一个方便的心智模型：<b>框架区是骨架，CDR 是可插拔的策略</b>。</p>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1W341127c3/" target="_blank" rel="noopener">【免疫三分钟】可变区／高变区／骨架区有什么不同</a>
+<small>B 站 · 3:50 · 专治这个三层嵌套的糊涂点——「高变区（HVR）」基本就是 CDR 的另一种叫法</small></div></div>
+<div class="key"><b>这一节的收获</b><p>你现在应该能读懂这句话了：
+<i>「这条抗体的 VH 有 118 个残基，CDRH3 是 <code>ARGSLV</code>，我们按 CDRH3 做序列级去重。」</i><br>
+翻译：<b>一个长 118 的字符串，其中一段关键子串是 ARGSLV，我们拿这段子串当去重键。</b></p></div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<p class="sub">五道题。做错的回上面对应段落重看一遍，别急着往下。</p>
+<div class="quiz" data-bank="d1" data-sec="s1"><h3>S1 · 分子的数据类型</h3></div>
+</section>

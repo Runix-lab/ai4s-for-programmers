@@ -1,0 +1,14 @@
+Course content in this repository — the text under content/, the glossary, and
+the question bank in assets/quiz.js — is licensed under
+
+    Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+    https://creativecommons.org/licenses/by-sa/4.0/
+
+You are free to share and adapt it, including commercially, provided you give
+appropriate credit and license derivatives under the same terms.
+
+Source code in this repository is licensed separately under MIT — see LICENSE.
+
+The sample dataset in labs/data/ is derived from RCSB PDB, whose data is
+released into the public domain (CC0). See labs/data/build_sample.py for how
+each field was produced.

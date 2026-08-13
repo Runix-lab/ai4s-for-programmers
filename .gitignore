@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+.DS_Store
+
+# Structure files are re-downloadable from RCSB on demand. Only 5E2W is kept in
+# the repo so that Lab 5 runs offline; the rest are build-time cache for
+# labs/data/build_sample.py.
+labs/data/structures/*
+!labs/data/structures/5E2W.cif.gz

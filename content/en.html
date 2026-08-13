@@ -1,0 +1,141 @@
+<div class="key"><b>Note on language</b>
+<p>The full course is currently written in <b>Chinese</b>. This page is the English
+overview: what the course covers, why it is structured the way it is, and the
+handful of ideas that transfer regardless of which language you read it in.<br>
+An English translation is planned. If you want it, say so in
+<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">an issue</a> —
+that is how it gets prioritised.</p></div>
+
+<section>
+<h2>The premise</h2>
+<p>Biology is not hard because it is complicated. It is hard because every
+introduction assumes you already have the vocabulary. So this course never
+explains a biological concept on its own terms first — it maps it onto something
+you already know, and only then tells you what it means biologically.</p>
+
+<div class="scroll"><table>
+<thead><tr><th>Biology</th><th>What you already know</th><th>Why the mapping holds</th></tr></thead>
+<tbody>
+<tr><td><b>Protein sequence</b></td><td class="mono">string</td>
+<td>Literally a string over a 20-letter alphabet</td></tr>
+<tr><td><b>Antibody</b></td><td class="mono">object holding 4 strings</td>
+<td>2 heavy chains + 2 light chains</td></tr>
+<tr><td><b>Variable / constant region</b></td><td class="mono">instance fields / shared class members</td>
+<td>The variable part differs per antibody; the constant part carries no distinguishing information</td></tr>
+<tr><td><b>CDR</b></td><td class="mono">the few substrings that decide behaviour</td>
+<td>Six short loops that determine what the antibody binds</td></tr>
+<tr><td><b>KD (affinity)</b></td><td class="mono">float on a log scale, lower is better</td>
+<td>Read it like p99 latency: only the order of magnitude matters</td></tr>
+<tr><td><b>UniProt accession</b></td><td class="mono">primary key / UUID</td>
+<td>Globally unique and stable</td></tr>
+<tr><td><b>Protein aliases, CD numbers</b></td><td class="mono">display names — <u>they collide</u></td>
+<td>PD-1 = PDCD1 = CD279, but CCR4 is also recorded as an alias of a different gene</td></tr>
+<tr><td><b>IMGT / Kabat / Chothia</b></td><td class="mono">competing schema versions</td>
+<td>Historical debt; each carves different field boundaries out of the same sequence</td></tr>
+<tr><td><b>Cross-source validation</b></td><td class="mono">you cannot verify a source with itself</td>
+<td>Checking a result with the source that produced it is circular reasoning</td></tr>
+<tr><td><b>QC flags</b></td><td class="mono">a known-issues list</td>
+<td>An all-clear QC report is the suspicious outcome, not the good one</td></tr>
+</tbody></table></div>
+
+<div class="key"><b>The whole argument in one line</b>
+<p>Every data problem in this field is one you have already met in software
+engineering. <b>What you are missing is the vocabulary, not the ability.</b></p></div>
+</section>
+
+<section>
+<h2>What the course covers</h2>
+<div class="scroll"><table>
+<thead><tr><th>Session</th><th>Topic</th><th></th></tr></thead>
+<tbody>
+<tr><td class="mono">S1</td><td>Molecules as data types: sequences, chains, variable regions, CDRs</td>
+<td><a href="/course/protein-as-string/">→</a></td></tr>
+<tr><td class="mono">S2</td><td>Binding: antigen vs epitope vs paratope, KD, and how it is measured</td>
+<td><a href="/course/binding-and-affinity/">→</a></td></tr>
+<tr><td class="mono">S3</td><td>Formats and identifiers: FASTA, PDB, UniProt, numbering schemes</td>
+<td><a href="/course/formats-and-ids/">→</a></td></tr>
+<tr><td class="mono">S4</td><td>Hands-on: open one real record, then health-check a whole dataset</td>
+<td><a href="/course/hands-on-day1/">→</a></td></tr>
+<tr><td class="mono">S5</td><td>What AI actually does here — and precisely where AlphaFold stops</td>
+<td><a href="/course/what-ai-does/">→</a></td></tr>
+<tr><td class="mono">S6</td><td>Data engineering: four layers, and five failures that really happened</td>
+<td><a href="/course/data-engineering/">→</a></td></tr>
+<tr><td class="mono"><b>S7</b></td><td><b>Quality and falsification — reproduce every bug yourself</b></td>
+<td><a href="/course/falsification/">→</a></td></tr>
+<tr><td class="mono">S8</td><td>Judgement: acceptance criteria, ten questions, red flags</td>
+<td><a href="/course/judgment/">→</a></td></tr>
+</tbody></table></div>
+<p>Plus <a href="/labs/">six runnable Python labs</a> and
+<a href="/quiz/">35 self-check questions</a>.</p>
+</section>
+
+<section>
+<h2>Three things that transfer, whatever language you read</h2>
+
+<div class="unit">
+<h3>1. You cannot validate a source with itself</h3>
+<p>Normalising gene names with UniProt and then checking the result with UniProt
+is circular reasoning. You need a second, <b>independent</b> authority — HGNC, in
+this case — and you only accept records where both agree.</p>
+<p>This is exactly the rule you already follow when writing tests: an assertion
+must not be derived from the logic under test. In
+<a href="/labs/#lab4">Lab 4</a> you run both APIs live and watch them disagree.</p>
+</div>
+
+<div class="unit">
+<h3>2. A field name means whatever the pipeline that produced it meant</h3>
+<p>PDB chain IDs carry no semantics — they are chosen by whoever deposited the
+structure. In <code>5B8C</code>, the heavy chains are B/E/H/K and the light
+chains are A/D/G/J. Any code that assumes <code>H</code> means heavy chain
+silently computes the wrong epitope.</p>
+<p>The general form: <b>a column called <code>Hchain</code> is somebody's
+judgement call, not a fact read off the file.</b> You are entitled to ask how
+that judgement was made.</p>
+</div>
+
+<div class="unit">
+<h3>3. A dataset with no known defects is the suspicious one</h3>
+<p>Real curated data always has ambiguity codes, partial chains, missing
+provenance. A QC report that is entirely green usually means the QC was shallow,
+not that the data is perfect. <b>Ask for the defect list; be wary of anyone who
+cannot produce one.</b></p>
+</div>
+</section>
+
+<section>
+<h2>How this material is maintained</h2>
+<div class="unit">
+<p>Every factual claim in this course was re-verified against primary sources
+before publication — database REST APIs, the original numbering-scheme papers,
+and the structures themselves. <b>That pass found and corrected fourteen
+errors in the first version</b>, including one in the very table that this site
+uses as its flagship example.</p>
+<p>Two of them are worth naming here, because they are the kind of thing that
+gets copied around unexamined:</p>
+<ul>
+<li><b>Kabat and Chothia define CDR-H3 identically.</b> The widely repeated claim
+that all three schemes carve different H3 boundaries is wrong; the differences
+are in H1 and L1.</li>
+<li><b>VHH nanobodies come from camelids only.</b> Shark single-domain antibodies
+are VNAR, derived from IgNAR — a separate evolutionary origin, not a kind of VHH.</li>
+</ul>
+<div class="key"><b>Why say this out loud</b>
+<p>Because a course about verifying other people's data has no business hiding
+its own corrections. The whole method is on
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub</a>;
+if you find an error, <a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">open an issue</a>
+and it gets fixed in public.</p></div>
+</div>
+</section>
+
+<section>
+<h2>Start here</h2>
+<div class="grid">
+<a class="cardlink" href="/course/"><em>FULL COURSE</em><b>Course overview →</b>
+<span>Two days, eight sessions, with a shorter path if you have less time.</span></a>
+<a class="cardlink" href="/course/falsification/"><em>ONE HOUR</em><b>Jump to S7 →</b>
+<span>The core session: reproduce four real data bugs yourself.</span></a>
+<a class="cardlink" href="/glossary/"><em>REFERENCE</em><b>Glossary →</b>
+<span>45 terms, each with a plain explanation and a programming analogy.</span></a>
+</div>
+</section>

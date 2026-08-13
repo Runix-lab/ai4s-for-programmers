@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>6 个可运行实验 · 亲手复现真实数据 bug</title>
+<meta name="description" content="六个 Python 实验：读一条真实抗体记录、数据体检、复现子串匹配假阳性、交叉源验证、从三维结构算表位、断言式质检。附完整源码。">
+<meta name="keywords" content="生物数据 Python 实验, 抗体 数据 分析 代码, gemmi 表位 计算, HGNC UniProt API, 数据质检 断言">
+<link rel="canonical" href="https://ai4s.runixcloud.io/labs/">
+<link rel="prev" href="https://ai4s.runixcloud.io/course/judgment/">
+<link rel="next" href="https://ai4s.runixcloud.io/quiz/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="6 个可运行实验 · 亲手复现真实数据 bug">
+<meta property="og:description" content="六个 Python 实验：读一条真实抗体记录、数据体检、复现子串匹配假阳性、交叉源验证、从三维结构算表位、断言式质检。附完整源码。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/labs/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/labs.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="6 个可运行实验 · 亲手复现真实数据 bug">
+<meta name="twitter:description" content="六个 Python 实验：读一条真实抗体记录、数据体检、复现子串匹配假阳性、交叉源验证、从三维结构算表位、断言式质检。附完整源码。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/labs.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"动手实验","item":"https://ai4s.runixcloud.io/labs/"}]},{"@type":"Article","headline":"6 个动手实验","description":"六个 Python 实验：读一条真实抗体记录、数据体检、复现子串匹配假阳性、交叉源验证、从三维结构算表位、断言式质检。附完整源码。","url":"https://ai4s.runixcloud.io/labs/","inLanguage":"zh-CN","author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"},"publisher":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"},"datePublished":"2026-08-13","dateModified":"2026-08-13"}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/">课程</a><a href="/labs/" class="on">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><span>动手实验</span></nav>
+<main id="main">
+<header><p class="eyebrow">LABS</p><h1>6 个动手实验</h1><p class="dek">每个实验都是一个可以直接跑的 Python 脚本，<b>不是伪代码</b>。四个离线可跑，两个需要联网（真的去请求 HGNC / UniProt）。</p></header>
+<section>
+<h2>先跑起来</h2>
+<div class="unit">
+<pre>$ git clone https://github.com/Runix-lab/ai4s-for-programmers
+$ cd ai4s-for-programmers
+$ python3 -m venv .venv &amp;&amp; source .venv/bin/activate
+$ pip install -r labs/requirements.txt
+
+$ python labs/lab1_read_one_record.py</pre>
+<p>需要 Python 3.10+。仓库里自带一份 <b>29 条的小样本数据集</b>，
+<b>全部由 RCSB PDB 的公开数据现场构建</b>（构建脚本也在仓库里，
+<code>labs/data/build_sample.py</code>，可复现）。
+所以四个离线实验开箱即跑，不需要你先去下载几十 GB 的东西。</p>
+<div class="trap"><b>两个实验需要联网：</b><a href="#lab4">Lab 4</a> 会真的去请求
+HGNC 和 UniProt 的公开 API，<a href="#lab6">Lab 6</a> 会真的去访问溯源链接。
+这是故意的——<b>它们要教的东西只有在真实网络条件下才会发生</b>
+（限流、反爬、查不到）。</div>
+</div>
+</section>
+
+<section>
+<h2>六个实验</h2>
+<p class="sub">按课程顺序排列。<b>如果只跑一个，跑 Lab 4。</b></p>
+
+<div class="lab">
+<h2 id="lab1">LAB 1 · 打开一条真实记录</h2>
+<pre>$ python labs/lab1_read_one_record.py</pre>
+<p>打印一条抗体记录的所有字段，让你把 <a href="/course/protein-as-string/">S1</a>–<a href="/course/formats-and-ids/">S3</a>
+的每个概念在真实数据里逐个找到。</p>
+<p class="meta" style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
+<a href="/course/hands-on-day1/#lab1">S4</a></p>
+</div>
+
+<div class="lab">
+<h2 id="lab2">LAB 2 · 给数据做体检</h2>
+<pre>$ python labs/lab2_data_checkup.py</pre>
+<p><code>SELECT COUNT(*) ... GROUP BY</code> 的生物版：总量、外键基数、
+证据等级分布、字段填充率、QC 标记分布。<b>拿到任何陌生数据的第一件事。</b></p>
+<p style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
+<a href="/course/hands-on-day1/#lab2">S4</a></p>
+</div>
+
+<div class="lab">
+<h2 id="lab3">LAB 3 · 亲手复现子串匹配 bug</h2>
+<pre>$ python labs/lab3_substring_bug.py</pre>
+<p>三类 bug 现场发生：词边界缺失导致的假阳性、
+前缀关系导致的误判（<b>加词边界也救不了</b>）、以及正则根本解决不了的语义陷阱。</p>
+<p style="color:var(--mut);font-size:13px">离线可跑 · 约 1 分钟 · 配套
+<a href="/course/falsification/#lab3">S7</a></p>
+</div>
+
+<div class="lab" style="border-width:2px">
+<h2 id="lab4">LAB 4 · 交叉源验证 <span style="color:var(--warn)">★ 最重要</span></h2>
+<pre>$ python labs/lab4_cross_source.py</pre>
+<p>把同一个问题问三次（HGNC + 两种 UniProt 查法），把归一化冲突现场打出来。
+你会看到<b>两种都「合理」的查法各自以不同方式翻车</b>——
+这比「有个 bug」重要得多。</p>
+<pre>输入     HGNC      UniProt-A 朴素                      UniProt-B 严谨
+CCR4   CCR4      CCR4 P51679 [Homo sapiens]        <u>NOCT Q9UK39</u>      <i>← 别名劫持</i>
+HER2   ERBB2     <u>GTF1 P53260 [Saccharomyces]</u>     ERBB2 P04626     <i>← 跨物种泄漏</i>
+PD-1   PDCD1     PD-1 Q9UMF3 [Homo sapiens]        (查不到)
+OX40   TNFRSF4   <u>- O02764 [Oryctolagus]</u>          (查不到)         <i>← 兔子同源</i></pre>
+<p style="color:var(--mut);font-size:13px"><b>需要联网</b> · 约 1 分钟 · 配套
+<a href="/course/falsification/#lab4">S7</a></p>
+</div>
+
+<div class="lab">
+<h2 id="lab5">LAB 5 · 从三维结构算出表位</h2>
+<pre>$ python labs/lab5_compute_epitope.py</pre>
+<p>把两侧原子丢进 KD 树做空间近邻查询，算出表位和互补位残基。
+输出里的 <code>SEP</code>／<code>TPO</code> 会顺带告诉你这个抗体识别的是<b>磷酸化状态</b>的目标。</p>
+<p style="color:var(--mut);font-size:13px">离线可跑（结构文件已内置）· 约 1 分钟 · 配套
+<a href="/course/falsification/#lab5">S7</a></p>
+</div>
+
+<div class="lab">
+<h2 id="lab6">LAB 6 · 断言式质检</h2>
+<pre>$ python labs/lab6_assert_qc.py</pre>
+<p>把数据质量写成一组必须成立的断言。<b>里面埋了一个陷阱</b>——
+关于 HTTP 403 该不该判定为「链接坏了」。自己跑出来体会。</p>
+<p style="color:var(--mut);font-size:13px"><b>需要联网</b> · 约 2 分钟 · 配套
+<a href="/course/falsification/#lab6">S7</a></p>
+</div>
+</section>
+
+<section>
+<h2>关于这份样本数据</h2>
+<div class="unit">
+<p>为了让实验开箱即跑，仓库里带了一份<b>小样本数据集</b>（<code>labs/data/</code>）。
+关于它你需要知道三件事：</p>
+<ul>
+<li><b>它只来自公开来源</b>：RCSB PDB 的结构、序列与 UniProt 交叉引用，
+CDR 用 ANARCI/abnumber 本地算，表位用 gemmi 现场算。
+构建脚本 <code>labs/data/build_sample.py</code> 就在仓库里，<b>可以自己重跑一遍</b>。</li>
+<li><b>它是 29 条的小样本，不是完整数据集</b>：够跑通全部实验、
+够看清每一类问题，但不足以训练任何东西。</li>
+<li><b>它包含真实的瑕疵</b>：3 条单域抗体没有轻链、2 条缺 UniProt 交叉引用、
+1 条含氨基酸模糊码——<b>全部保留并在 QC_flags 里如实标记</b>。
+一份被洗得完美无瑕的教学数据，会让你学到一套在真实世界里不成立的直觉。</li>
+<li><b>它自己就验证了课程里的两个论断</b>：29/29 行的 Kabat 与 Chothia CDRH3 完全相同，
+16/29 行的抗原链不是 A。<b>不用信我，跑 <a href="/labs/#lab2">Lab 2</a> 自己数。</b></li>
+</ul>
+<div class="key"><b>如果你想在更大的数据上练</b>
+<p>公开可获取的起点：<a href="https://opig.stats.ox.ac.uk/webapps/sabdab-sabdab/" rel="noopener">SAbDab</a>
+（抗体结构）、<a href="https://www.rcsb.org/" rel="noopener">RCSB PDB</a>（全部结构）、
+<a href="https://www.uniprot.org/" rel="noopener">UniProt</a>（蛋白序列与注释）、
+<a href="https://www.iedb.org/" rel="noopener">IEDB</a>（表位）。<br>
+<b>用之前先看各自的使用条款</b>——这正是
+<a href="/course/judgment/#ten-questions">S8 第 10 问</a>要你问别人的那件事，
+对自己也一样适用。</p></div>
+</div>
+</section>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/judgment/" rel="prev"><small>上一节</small>S8 · 判定与商业</a><a class="n" href="/quiz/" rel="next"><small>下一节</small>在线检验</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

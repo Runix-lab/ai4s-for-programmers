@@ -1,0 +1,112 @@
+<div class="key"><b>关于这份清单的一句实话</b>
+<p>下面每条视频的<b>标题、时长、发布者都逐条核对过</b>，
+数据库入口是机构官方域名。<br>
+<b>但链接会失效，视频会被下架。</b>如果你发现某条打不开了，
+<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a>，
+我会替换掉——<b>而不是留着一句「全部实测存活」当摆设</b>。</p></div>
+
+<section>
+<h2>如果只看一条</h2>
+<div class="vid" style="border-color:var(--warn);border-width:2px">
+<div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=P_fHJIYENdI" target="_blank" rel="noopener">AlphaFold — The Most Useful Thing AI Has Ever Done</a>
+<small>YouTube · Veritasium · 英文，可开自动中文字幕<br>
+<b>整个课程如果你只看一个视频，就看这条。</b>
+顶级科普频道，完全面向外行，把「为什么结构预测是件大事」讲得比任何文字都清楚。
+配套 <a href="/course/what-ai-does/">S5</a>。</small></div></div>
+</section>
+
+<section>
+<h2>按课程章节配套</h2>
+
+<h3 style="font-size:16px;margin-top:28px">S1 · 分子的数据类型</h3>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1wx411e7XX/" target="_blank" rel="noopener">【3D 演示】抗体的结构和应用</a>
+<small>B 站 · 19:07 · 中文字幕 —— <b>看完这条你就能看懂任何抗体示意图。</b>
+Day 1 最值得看的一条。配套 <a href="/course/protein-as-string/#u1-2">S1.2</a></small></div></div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1W341127c3/" target="_blank" rel="noopener">【免疫三分钟】可变区／高变区／骨架区有什么不同</a>
+<small>B 站 · 3:50 · 专治这个三层嵌套的糊涂点。配套 <a href="/course/protein-as-string/#u1-4">S1.4</a></small></div></div>
+
+<h3 style="font-size:16px;margin-top:28px">S2 · 结合与亲和力</h3>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.bilibili.com/video/BV1YV411t7xB" target="_blank" rel="noopener">抗原表位及其分类</a>
+<small>B 站 · 6:45 · 讲清一个抗原上有很多表位、线性 vs 构象、功能性 vs 隐蔽表位。
+配套 <a href="/course/binding-and-affinity/#linear-vs-conformational">S2.1</a></small></div></div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=3UHJ9gnpqB0" target="_blank" rel="noopener">Kd, the Dissociation Constant: What is it?</a>
+<small>YouTube · Catalyst University · 英文 · 专讲 KD 一个概念，不发散。
+配套 <a href="/course/binding-and-affinity/#u2-2">S2.2</a></small></div></div>
+
+<h3 style="font-size:16px;margin-top:28px">S3 · 格式与标识符</h3>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=8QLqX1_NJ9A" target="_blank" rel="noopener">Antibody Numbering Schemes</a>
+<small>YouTube · NaturalAntibody · 5:56 · 英文 ·
+<b>全网几乎唯一专讲这个话题的视频</b>，冷门但极对口。
+配套 <a href="/course/formats-and-ids/#numbering">S3.2</a></small></div></div>
+
+<h3 style="font-size:16px;margin-top:28px">S5 · AI 在做什么</h3>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=6xIHD-SU8OQ" target="_blank" rel="noopener">AI 製藥的護城河：不是大模型，而是「定制化模型」</a>
+<small>YouTube · 制藥漫談 · 中文 · 和 <a href="/course/what-ai-does/#data-bottleneck">S5.3</a>
+那张对比表互为印证，是谈这件事时的话术素材。</small></div></div>
+</section>
+
+<section>
+<h2>数据库与工具（都是机构官方入口）</h2>
+
+<div class="scroll"><table>
+<thead><tr><th>入口</th><th>是什么</th><th>什么时候用</th></tr></thead>
+<tbody>
+<tr><td><a href="https://www.uniprot.org/" rel="noopener">UniProt</a></td>
+<td>蛋白序列与注释的权威库，登录号的来源</td>
+<td>靶点归一化；查一个登录号到底是什么蛋白</td></tr>
+
+<tr><td><a href="https://www.genenames.org/" rel="noopener">HGNC</a></td>
+<td>人类基因命名委员会</td>
+<td><b>交叉源验证</b>——它和 UniProt 相互独立</td></tr>
+
+<tr><td><a href="https://www.rcsb.org/" rel="noopener">RCSB PDB</a></td>
+<td>蛋白质三维结构公共库</td>
+<td>核对一个 PDB 号；在浏览器里转结构看表位</td></tr>
+
+<tr><td><a href="https://opig.stats.ox.ac.uk/webapps/sabdab-sabdab/" rel="noopener">SAbDab</a></td>
+<td>牛津 OPIG 维护的抗体结构策展库</td>
+<td>找抗体-抗原复合物结构；看策展库怎么标注链</td></tr>
+
+<tr><td><a href="https://www.iedb.org/" rel="noopener">IEDB</a></td>
+<td>免疫表位数据库</td>
+<td>查已知表位；理解表位数据的形态</td></tr>
+
+<tr><td><a href="https://github.com/oxpig/ANARCI" rel="noopener">ANARCI</a></td>
+<td>抗体编号工具（开源）</td>
+<td>给序列编号；<b>复核你自己的 CDR 切法</b></td></tr>
+
+<tr><td><a href="https://alphafold.ebi.ac.uk/" rel="noopener">AlphaFold DB</a></td>
+<td>AlphaFold 预测结构的公开数据库</td>
+<td>直观感受预测结构长什么样、置信度怎么标</td></tr>
+</tbody></table></div>
+
+<div class="trap"><b>用之前先看条款：</b>公开可访问不等于可商用。
+不同库对<b>再分发和商业用途</b>的规定差别很大，有些要求署名，有些区分学术与商业。
+这正是 <a href="/course/judgment/#ten-questions">S8 第 10 问</a>要你问别人的那件事——
+<b>对自己也一样适用。</b></div>
+</section>
+
+<section>
+<h2>两个不用装任何东西的练手方式</h2>
+<div class="unit">
+<h3>① 在浏览器里转一个真实复合物</h3>
+<p>打开 <a href="https://www.rcsb.org/3d-view/5B8C" rel="noopener">rcsb.org/3d-view/5B8C</a>，
+用鼠标转一转，找到抗体尖端贴在 PD-1 上的地方。<b>那里就是表位和互补位。</b>
+两分钟，比读十页文字管用。</p>
+</div>
+<div class="unit">
+<h3>② 用 REST API 查一个登录号</h3>
+<pre>$ curl -s https://rest.uniprot.org/uniprotkb/Q15116.json | head -40
+$ curl -s https://rest.genenames.org/fetch/symbol/PDCD1 -H "Accept: application/json"</pre>
+<p>两个都是公开只读 API，不需要 key。
+<b>跑一遍你就知道「交叉源验证」在工程上具体是什么动作了</b>——
+就是这两条命令，然后比对结果。</p>
+</div>
+</section>

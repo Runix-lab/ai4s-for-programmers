@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AlphaFold 解决了什么、没解决什么</title>
+<meta name="description" content="AlphaFold2 解决单体折叠，AlphaFold-Multimer 和 AlphaFold 3 扩展到复合物，但抗体-抗原仍是最弱的一类。用函数签名理解 AI4S 的三类任务，以及为什么瓶颈是数据不是模型。">
+<meta name="keywords" content="AlphaFold 原理, AlphaFold 局限, 蛋白质结构预测, 抗体 设计 AI, AI 制药 数据 瓶颈">
+<link rel="canonical" href="https://ai4s.runixcloud.io/course/what-ai-does/">
+<link rel="prev" href="https://ai4s.runixcloud.io/course/hands-on-day1/">
+<link rel="next" href="https://ai4s.runixcloud.io/course/data-engineering/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="AlphaFold 解决了什么、没解决什么">
+<meta property="og:description" content="AlphaFold2 解决单体折叠，AlphaFold-Multimer 和 AlphaFold 3 扩展到复合物，但抗体-抗原仍是最弱的一类。用函数签名理解 AI4S 的三类任务，以及为什么瓶颈是数据不是模型。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/course/what-ai-does/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/alphafold.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AlphaFold 解决了什么、没解决什么">
+<meta name="twitter:description" content="AlphaFold2 解决单体折叠，AlphaFold-Multimer 和 AlphaFold 3 扩展到复合物，但抗体-抗原仍是最弱的一类。用函数签名理解 AI4S 的三类任务，以及为什么瓶颈是数据不是模型。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/alphafold.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S5 · AI 在做什么","item":"https://ai4s.runixcloud.io/course/what-ai-does/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/what-ai-does/#lesson","name":"AI for Science 在这里做什么","description":"AlphaFold2 解决单体折叠，AlphaFold-Multimer 和 AlphaFold 3 扩展到复合物，但抗体-抗原仍是最弱的一类。用函数签名理解 AI4S 的三类任务，以及为什么瓶颈是数据不是模型。","url":"https://ai4s.runixcloud.io/course/what-ai-does/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT60M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["AlphaFold 的贡献与边界","结构预测/亲和力预测/从头设计三类任务","为什么数据是瓶颈"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"AlphaFold 解决了什么问题？","acceptedAnswer":{"@type":"Answer","text":"AlphaFold 让「从氨基酸序列预测单体蛋白的三维结构」在大多数情况下达到接近实验的精度，把原本需要数月到数年的实验测定压缩到分钟级。这是结构生物学的分水岭事件。"}},{"@type":"Question","name":"为什么抗体设计还是很难？","acceptedAnswer":{"@type":"Answer","text":"抗体-抗原结合属于蛋白-蛋白相互作用，比单体折叠难得多；而且 CDRH3 由基因重组随机拼接产生，缺乏可借鉴的进化同源信息。同时可用于训练的真实配对数据极少——结构复合物只有数千个，定量亲和力数据只有数百条量级。所以这个方向至今高度依赖真实实验数据。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S5 · AI 在做什么</span></nav>
+<main id="main">
+<header><p class="eyebrow">DAY 2 · S5 · 上午 60 分钟</p><h1>AI for Science 在这里做什么</h1><p class="dek">不讲模型细节，只讲<b>有哪几类任务、各自的输入输出和现状</b>。</p></header>
+<div class="unit">
+<h2 id="alphafold"><span>U5.1</span>分水岭：AlphaFold</h2>
+<p>2020 年之前，测定一个蛋白质的三维结构要在实验室花几个月到几年
+（X 射线晶体学、冷冻电镜）。DeepMind 的 <b>AlphaFold2</b> 让
+「从序列预测单体结构」在大多数情况下达到接近实验的精度，把周期压到分钟级。</p>
+<div class="map">
+<div class="l"><b>AlphaFold 解决的</b><small>给定一条序列，它折成什么形状</small></div>
+<div class="mid">→</div>
+<div class="r"><b>predict(str) -&gt; Structure3D</b><small>单体，已基本可用</small></div>
+</div>
+
+<div class="key"><b>但要精确地记住它的边界（这一段值得慢读）</b>
+<p>AlphaFold<b>2</b> 解决的是<b>单体蛋白怎么折叠</b>。
+之后 <b>AlphaFold-Multimer</b>（2021）和 <b>AlphaFold 3</b>（2024）
+把能力扩展到了复合物，在很多蛋白-蛋白体系上确实已经可用。<br><br>
+<b>但抗体-抗原界面仍是其中最弱的一类。</b>
+AlphaFold 3 原文自己就把抗体-抗原单独拎出来讨论：
+相比 AlphaFold-Multimer v2.3 有显著提升，
+<b>但需要大幅增加采样（上千个 seed）才能拿到好结果</b>——
+这本身就说明它离「稳定可用」还有距离。<br><br>
+根本原因：<b>CDRH3 由基因重组随机产生，没有进化同源信息可借鉴</b>，
+而共进化信号恰恰是这套方法最依赖的东西。<br>
+<b>这就是为什么这个领域至今高度依赖真实实验数据。</b></p></div>
+
+<div class="trap"><b>说法要精确，这本身就是判断力的一部分：</b><br>
+❌ 「AlphaFold 没解决蛋白复合物」——<b>过时</b>了，AF-Multimer 和 AF3 之后不能这么说。<br>
+❌ 「AlphaFold 解决了抗体设计」——<b>错</b>的。<br>
+✅ 「单体折叠基本解决，一般复合物大幅改善，<b>抗体-抗原仍是公认难点</b>。」<br><br>
+能把这句话说准，你在这个话题上的可信度就已经超过大多数人。
+<b>而这门课第一版恰好写成了那个过时的说法</b>——
+一份 2020 年的正确结论，到 2026 年会变成一个显得外行的错误。
+<b>时效性是科学材料的一等公民，不是脚注。</b></div>
+
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=P_fHJIYENdI" target="_blank" rel="noopener">AlphaFold — The Most Useful Thing AI Has Ever Done</a>
+<small>YouTube · Veritasium · <b>如果整个课程你只看一个视频，就看这条。</b>
+顶级科普频道，完全面向外行，可开自动中文字幕。</small></div></div>
+</div>
+
+<div class="unit">
+<h2 id="three-tasks"><span>U5.2</span>三类任务，用函数签名来理解</h2>
+<pre><i># ① 结构预测 —— 单体基本可用，抗体-抗原复合物仍难</i>
+<b>def</b> predict_structure(seq: str) -&gt; Structure3D: ...
+
+<i># ② 亲和力预测 —— 数据太少，跨靶点泛化差</i>
+<b>def</b> predict_affinity(ab: str, ag: str) -&gt; float:   <i># KD 或 ΔΔG</i>
+
+<i># ③ 从头设计 —— 最热，也最需要配对数据</i>
+<b>def</b> design_antibody(target: str) -&gt; list[str]: ...</pre>
+<p>第三个是当下最受关注的方向。它需要大量
+<b>「靶点 ↔ 抗体序列」的成对样本</b>来学这个映射。</p>
+<div class="key"><b>翻译一句常见的验收标准</b><p>行业里常见这句要求：
+<i>「序列不能只是随机抗体库，需要有 binding context」</i>。<br>
+翻译成工程语言就是：<b>没有 label 的样本，对监督学习没用。</b><br>
+一个十亿条序列的免疫组库（repertoire）如果不知道每条抓什么，
+对这个任务的价值接近于零——但它<b>非常适合用来凑条数</b>。
+记住这一条，<a href="/course/judgment/">S8</a> 会用到。</p></div>
+</div>
+
+<div class="unit">
+<h2 id="data-bottleneck"><span>U5.3</span>为什么数据是瓶颈，不是模型</h2>
+<div class="scroll"><table>
+<thead><tr><th></th><th>NLP / CV</th><th>抗体 AI</th></tr></thead>
+<tbody>
+<tr><td>数据获取</td><td>互联网上几乎无限</td><td>每条都来自<b>真实实验</b>或专利披露</td></tr>
+<tr><td>标注成本</td><td>众包即可</td><td>需要领域专家，很多标注本身就要做实验</td></tr>
+<tr><td>数据量级</td><td>万亿 token</td><td><b>抗体-抗原结构复合物只有数千个</b>，高质量定量亲和力只有数百条量级</td></tr>
+<tr><td>脏数据后果</td><td>模型稍差</td><td><b>学到错误的结合规律，静默失效</b></td></tr>
+</tbody></table></div>
+<p>最后一行是这门课存在的理由。在 NLP 里脏数据让指标掉两个点；
+在这里，一批被错误归因的配对会让模型学到一个<b>物理上不存在的规律</b>，
+而且从损失曲线上完全看不出来——因为验证集是用同样的方法造的，
+<b>脏得一模一样</b>。</p>
+<div class="map">
+<div class="l"><b>训练集和验证集用同一条脏管线生成</b><small>指标很好看，模型是错的</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>data leakage</b><small>你已经很熟悉这种失败模式</small></div>
+</div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=6xIHD-SU8OQ" target="_blank" rel="noopener">AI 製藥的護城河：不是大模型，而是「定制化模型」</a>
+<small>YouTube · 制藥漫談 · 中文 · 和上面这张表互为印证</small></div></div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<div class="quiz" data-bank="d2" data-sec="s5"><h3>S5 · AI 在做什么</h3></div>
+</section>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/hands-on-day1/" rel="prev"><small>上一节</small>S4 · 动手（Day 1）</a><a class="n" href="/course/data-engineering/" rel="next"><small>下一节</small>S6 · 数据工程</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/quiz.js" defer></script>
+</body>
+</html>

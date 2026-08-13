@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IMGT / Kabat / Chothia 区别与 UniProt 登录号</title>
+<meta name="description" content="FASTA、PDB、UniProt 登录号，以及三套抗体编号体系为什么会切出不同的 CDR 边界。附一条真实序列在三套体系下的对照，以及别名冲突的翻车案例。">
+<meta name="keywords" content="IMGT Kabat Chothia 区别, 抗体编号 体系, UniProt 登录号, FASTA 格式, PDB 结构, 基因 别名 冲突">
+<link rel="canonical" href="https://ai4s.runixcloud.io/course/formats-and-ids/">
+<link rel="prev" href="https://ai4s.runixcloud.io/course/binding-and-affinity/">
+<link rel="next" href="https://ai4s.runixcloud.io/course/hands-on-day1/">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta name="author" content="Runix">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="AI4S for Programmers">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="IMGT / Kabat / Chothia 区别与 UniProt 登录号">
+<meta property="og:description" content="FASTA、PDB、UniProt 登录号，以及三套抗体编号体系为什么会切出不同的 CDR 边界。附一条真实序列在三套体系下的对照，以及别名冲突的翻车案例。">
+<meta property="og:url" content="https://ai4s.runixcloud.io/course/formats-and-ids/">
+<meta property="og:image" content="https://ai4s.runixcloud.io/assets/og/imgt.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IMGT / Kabat / Chothia 区别与 UniProt 登录号">
+<meta name="twitter:description" content="FASTA、PDB、UniProt 登录号，以及三套抗体编号体系为什么会切出不同的 CDR 边界。附一条真实序列在三套体系下的对照，以及别名冲突的翻车案例。">
+<meta name="twitter:image" content="https://ai4s.runixcloud.io/assets/og/imgt.png">
+<meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
+<meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https://ai4s.runixcloud.io/"},{"@type":"ListItem","position":2,"name":"课程总览","item":"https://ai4s.runixcloud.io/course/"},{"@type":"ListItem","position":3,"name":"S3 · 格式与标识符","item":"https://ai4s.runixcloud.io/course/formats-and-ids/"}]},{"@type":"LearningResource","@id":"https://ai4s.runixcloud.io/course/formats-and-ids/#lesson","name":"数据格式与标识符：你的主场","description":"FASTA、PDB、UniProt 登录号，以及三套抗体编号体系为什么会切出不同的 CDR 边界。附一条真实序列在三套体系下的对照，以及别名冲突的翻车案例。","url":"https://ai4s.runixcloud.io/course/formats-and-ids/","inLanguage":"zh-CN","learningResourceType":"Lesson","educationalLevel":"Beginner","timeRequired":"PT90M","isPartOf":{"@type":"Course","@id":"https://ai4s.runixcloud.io/course/#course"},"teaches":["FASTA 与 PDB 格式","IMGT/Kabat/Chothia 三套编号体系的差异","UniProt 登录号作为主键","蛋白别名冲突的风险"],"isAccessibleForFree":true,"author":{"@type":"Organization","name":"Runix","url":"https://runixcloud.io"}},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"IMGT、Kabat、Chothia 有什么区别？","acceptedAnswer":{"@type":"Answer","text":"它们是三套并存的抗体残基编号体系，作用都是让不同长度的抗体可变区能按「结构位置」对齐比较。区别在于 CDR 边界的划法不同：Kabat（1970 年代起）按序列变异度划，Chothia（1987）按结构环划，IMGT（1997）用统一的结构域编号、是目前最主流的一套。但要注意两点：一是常用的编号体系不止三套，还有 Martin、AbM、Contact、AHo、North 等；二是 Kabat 与 Chothia 对 CDR-H3 的定义其实是相同的，它们的差别体现在 CDR-H1 和 CDR-L1 上。一份数据集只给一套编号却不说明是哪套，等同于给了日期字段却不说时区。"}},{"@type":"Question","name":"为什么靶点必须归一到 UniProt 登录号？","acceptedAnswer":{"@type":"Answer","text":"因为蛋白名字极不稳定：PD-1 又叫 PDCD1、CD279、programmed cell death protein 1，而且不同基因之间的别名会互相撞车。UniProt 登录号（如人 PD-1 是 Q15116）全球唯一且稳定，是这个领域唯一可靠的主键。"}}]}]}</script>
+</head>
+<body>
+<a class="skip" href="#main">跳到正文</a>
+<div id="bar"></div>
+<nav aria-label="主导航"><div class="in"><a class="brand" href="/">AI4S<span>/dev</span></a><a href="/course/" class="on">课程</a><a href="/labs/">实验</a><a href="/quiz/">检验</a><a href="/glossary/">术语表</a><a href="/resources/">资源</a><a href="/en/">EN</a><button id="theme" type="button" aria-label="切换深浅色">◐</button></div></nav>
+<div class="wrap">
+<nav class="crumb" aria-label="面包屑"><a href="/">首页</a><i aria-hidden="true">/</i><a href="/course/">课程总览</a><i aria-hidden="true">/</i><span>S3 · 格式与标识符</span></nav>
+<main id="main">
+<header><p class="eyebrow">DAY 1 · S3 · 下午 90 分钟</p><h1>数据格式与标识符：你的主场</h1><p class="dek">这一节全是你的主场——<b>格式、schema、主键、别名冲突</b>。</p></header>
+<div class="unit">
+<h2 id="u3-1"><span>U3.1</span>FASTA：一行描述 + 一段 payload</h2>
+<pre>&gt;WQA35248.1 Sequence 45 from patent US 11753463
+QVQLVQSGAEVKKPGASVKVSCKASGYTFTNYYMYWVRQAPGQGLEWMGG
+INPSNGGTNFNEKFKNRVTLTTDSSTTTAYMELKSLQFDDTAVYYCARRD</pre>
+<p>就这么简单。<code>&gt;</code> 开头是描述行（defline），下面是序列，
+换行只是排版、不带语义。它是 1985 年的格式，至今没有被取代，
+因为它<b>够用</b>——这一点你应该很熟悉。</p>
+<div class="trap"><b>看出问题了吗？</b>上面这条真实的专利序列，描述行只写了
+「来自专利 US 11753463 的第 45 条序列」——<b>完全没说这个抗体抓什么靶点</b>。<br>
+这就是整个行业最大的瓶颈：<b>序列供给巨大，但靶点标签要读专利全文才有</b>。
+一条没有靶点标签的抗体序列，对「从头设计抗体」这个任务来说是<b>没有 label 的样本</b>。
+这条线索会在 <a href="/course/what-ai-does/">S5</a> 变成一个具体的商业结论。</div>
+</div>
+
+<div class="unit">
+<h2 id="numbering"><span>U3.2</span>IMGT / Kabat / Chothia：三套并存的 schema 版本</h2>
+<p><b>问题是什么：</b>不同抗体的可变区长度不一样。
+那「第 52 位氨基酸」在不同抗体之间就没法比较——
+就像两本页数不同的书没法按页码互相对照。</p>
+<p><b>解法是什么：</b>搞一套标准编号，让不同抗体的「同一个结构位置」拿到同一个编号。
+长度不同的地方用插入字母（52A、52B）或留空位来对齐。</p>
+<div class="map">
+<div class="l"><b>IMGT / Kabat / Chothia</b><small>三套编号体系，历史原因并存至今</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>三个 schema 版本</b><small>同一份数据，字段边界划法不同</small></div>
+</div>
+
+<h3 id="three-schemes">最常见的三套：来历和取向</h3>
+<div class="scroll"><table>
+<thead><tr><th>体系</th><th>提出年代</th><th>依据什么划</th><th>今天的位置</th></tr></thead>
+<tbody>
+<tr><td><b>Kabat</b></td><td>1970 年代起</td><td>序列<b>变异度</b>：哪些位置在不同抗体间变化最大</td>
+<td>最老，早期文献大量沿用</td></tr>
+<tr><td><b>Chothia</b></td><td>1987</td><td><b>结构环</b>的起止：真正在空间上凸出来的那一段</td>
+<td>做结构建模时常用</td></tr>
+<tr><td><b>IMGT</b></td><td>1997</td><td>统一的<b>结构域编号</b>，跨物种、跨受体类型通用</td>
+<td>最系统，<b>目前的主流</b></td></tr>
+</tbody></table></div>
+<div class="trap"><b>先纠正一个常见的简化说法：</b>不止三套。
+除了上面这三套，实际在用的还有 <b>Martin（增强 Chothia）、AbM、Contact、AHo、North</b> 等，
+<a href="https://github.com/oxpig/ANARCI" rel="noopener">ANARCI</a> 这类工具支持的就有七八种。<br>
+「三套」是入门时够用的简化，<b>但写进合同验收条款时不要这么写</b>——
+要写「明确声明所使用的编号体系」，而不是「须提供三套编号」。</div>
+
+<h3 id="why-it-matters">为什么这件事对你重要</h3>
+<p>因为不同编号会切出<b>不一样的 CDR 边界</b>。同一条真实序列
+（AT8 抗体的重链），问「CDR 是什么」，得到的答案取决于你用哪套：</p>
+<div class="scroll"><table>
+<caption class="sr-only">同一条抗体序列在三套编号体系下的 CDR 差异示例</caption>
+<thead><tr><th>编号体系</th><th>切出的 CDRH1</th><th>切出的 CDRH3</th></tr></thead>
+<tbody>
+<tr><td><b>IMGT</b></td><td class="mono">DYSITSGYY</td><td class="mono">TRGSLV</td></tr>
+<tr><td><b>Kabat</b></td><td class="mono">SGYYWN</td><td class="mono">GSLV</td></tr>
+<tr><td><b>Chothia</b></td><td class="mono">DYSITSGY</td><td class="mono">GSLV　<i style="color:var(--mut);font-style:normal">← 与 Kabat 相同</i></td></tr>
+</tbody></table></div>
+
+<div class="key"><b>请特别注意最后一格</b><p><b>Kabat 和 Chothia 对 CDR-H3 的定义是完全相同的</b>
+（都是 H95–H102）。它们的差别体现在 CDR-H1 和 CDR-L1 上，<b>不体现在 H3 上</b>。<br><br>
+这条本身就是一次判断力训练：<b>「三套编号会切出不同的 CDR」这句话是对的，
+但不能推出「任意两套在任意一个 CDR 上都不同」</b>。
+把前者当成后者去写代码，你会给 H3 建一套根本不存在的转换逻辑。<br>
+<i>（顺带一提：网上流传的一个「Chothia CDR-H3 = SL」的说法，
+其实是把极少使用的 Consensus Chothia 定义错标成了 Chothia。这门课第一版也抄错过。）</i></p></div>
+
+<div class="trap"><b>下游后果具体是什么：</b>假设你按 CDRH3 做序列级去重。
+用 IMGT 切出 <code>TRGSLV</code>（6 个字符）、用 Kabat/Chothia 切出 <code>GSLV</code>（4 个字符）——
+<b>更短的键会把本不相同的抗体误判成重复</b>而合并掉。
+一次编号体系选错，损失的是数据集的有效样本量，<b>而且不会有任何报错</b>。</div>
+<div class="key"><b>判定要点</b><p>正经数据集必须<b>明确声明用的是哪套编号</b>，
+最好多套并给。只给一套还不说是哪套，
+那和给你一个日期字段但不说是 UTC 还是本地时间一样——<b>数据无法安全使用</b>。<br>
+这也是你能问出的第二个专业问题：<i>「CDR 用哪套编号切的？和独立工具比对过吗？」</i></p></div>
+<div class="vid"><div class="ico" aria-hidden="true">▶</div><div>
+<a href="https://www.youtube.com/watch?v=8QLqX1_NJ9A" target="_blank" rel="noopener">Antibody Numbering Schemes</a>
+<small>YouTube · NaturalAntibody · 5:56 · 全网几乎唯一专讲这个话题的视频，冷门但极对口</small></div></div>
+</div>
+
+<div class="unit">
+<h2 id="uniprot"><span>U3.3</span>UniProt 登录号 = 主键；名字 = 会撞的别名</h2>
+<p>每个蛋白在 <a href="https://www.uniprot.org/" rel="noopener">UniProt</a> 里有一个全球唯一的
+<b>登录号</b>（accession），比如人 PD-1 是 <code>Q15116</code>。</p>
+<p>为什么必须用它：靶点的名字非常乱。PD-1 又叫 PDCD1、CD279、
+programmed cell death protein 1——都是同一个东西。<b>只有登录号唯一且稳定。</b></p>
+<div class="map">
+<div class="l"><b>UniProt 登录号</b><small>Q15116</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>主键 / UUID</b><small>唯一、稳定、跨系统可引用</small></div>
+</div>
+<div class="map">
+<div class="l"><b>蛋白名 / 别名 / CD 号</b><small>PD-1、PDCD1、CD279…</small></div>
+<div class="mid">≈</div>
+<div class="r"><b>display name</b><small>可读、会变、<u>会撞</u></small></div>
+</div>
+
+<div class="trap"><b>真实翻车案例（这是本课最重要的一个陷阱）：</b><br>
+最初把 <code>CCR4</code> 归一到了 <code>NOCT</code>（登录号 <code>Q9UK39</code>）这个基因上。
+而真正的 CCR4（趋化因子受体 CC motif receptor 4，一个真实的药物靶点）是<b>完全另一个基因</b>。<br><br>
+同类的还有几个：<b>4-1BB、CD166、OX40</b> ——全都是主流免疫肿瘤靶点，
+全都因为名字解析走错了路由而被归到了错误的条目上。<br><br>
+<b>而且从数据表面完全看不出来</b>：字段齐全、格式正确、条数够、每条都有登录号。<br>
+→ <a href="/labs/#lab4">Lab 4</a> 会让你亲手把这个 bug 跑出来。</div>
+
+<div class="key"><b>根因，以及为什么它比看上去更难防</b>
+<p>直觉上的解释是「NOCT 的废弃旧名叫 CCR4」——<b>但这个解释是错的，值得你注意</b>。<br><br>
+去 <a href="https://rest.genenames.org/fetch/symbol/NOCT" rel="noopener">HGNC 查 NOCT</a>，
+它记录的 previous symbol 是 <code>CCRN4L</code>，<b>不是 CCR4</b>。
+「CCR4」出现在 <a href="https://rest.uniprot.org/uniprotkb/Q9UK39.txt" rel="noopener">UniProt 的 Q9UK39</a>
+里，作为一个 <b>gene name synonym</b>。<br><br>
+<b>后果很具体：</b>如果你的防御措施是「把 HGNC 里所有废弃符号拉黑」，
+<b>这个坑照样会踩</b>——因为它根本不在那张表里。
+两个权威库对「什么算这个基因的别名」<b>本来就不完全一致</b>，
+而冲突恰好发生在它们不一致的地方。</p></div>
+
+<div class="key"><b>修法</b><p>三条，按重要性排：<br>
+① <b>现用符号优先路由</b>：先查现用基因符号，再查别名和旧名，
+命中别名时降低置信度并标记待复核。<br>
+② <b>不要只用一个源的别名表</b>——因为它们互相不一致。<br>
+③ <b>用另一个独立源复核归一化结果</b>，两边不一致的一律人工看。<br>
+翻译成你的语言：<b>外键解析不能用可能冲突的 alias 当第一路由，
+而且别名表本身也需要交叉验证。</b></p></div>
+</div>
+
+<div class="unit">
+<h2 id="pdb"><span>U3.4</span>PDB：三维坐标数据</h2>
+<p><a href="https://www.rcsb.org/" rel="noopener">PDB</a> 是全球蛋白质三维结构的公共库，
+每个结构一个 4 位编号（如 <code>5B8C</code>）。文件里逐个原子记录 (x, y, z) 坐标。</p>
+<p>一个抗体-抗原复合物结构里会有多条<b>链</b>，每条一个字母标识。
+数据表里常见的 <code>Hchain / Lchain / Antigen_chain</code> 三列，
+记录的就是「哪条链是重链、哪条是轻链、哪条是抗原」。</p>
+<div class="trap"><b>这里有一个几乎人人都会犯的错：</b>
+以为 PDB 里的链 ID 有语义——H 就是重链、L 就是轻链、A 就是抗原。<br><br>
+<b>没有这个约定。链 ID 完全由结构的沉积者自己起名。</b><br><br>
+反例就是本课一直在用的 <code>5B8C</code>（PD-1 与 pembrolizumab 的复合物）：
+它的<b>轻链</b>是 A/D/G/J，<b>重链</b>是 B/E/H/K，<b>抗原</b>是 C/F/I/L。
+按「H=重链、L=轻链、A=抗原」这条规则去解析，
+你会<b>把轻链当成抗原</b>，然后算出一份完全错误的表位。<br><br>
+所以 <code>Hchain / Lchain / Antigen_chain</code> 这三列<b>是别人替你判定过的结果</b>
+（SAbDab 这类策展库会做这件事），不是从 PDB 文件里直接读出来的。
+<b>它们是加工过的字段，你有权追问它是怎么判定的。</b></div>
+<div class="key"><b>这一条的通用版本</b><p>看到一个字段叫 <code>Hchain</code>，
+不要假设它等于「PDB 里那条叫 H 的链」。
+<b>字段名的含义来自生成它的那个管线，不来自它长得像什么。</b><br>
+这也是为什么 <a href="/labs/#lab5">Lab 5</a> 那个例子里，
+抗原链是 <code>P</code> ——硬编码 <code>chain == "A"</code> 会直接算错。</p></div>
+<div class="key"><b>为什么结构数据最值钱</b><p>有了三维结构，「这个抗体抓这个抗原」就不是别人说的，
+而是<b>看得见的物理事实</b>——两个分子在坐标里真的贴在一起。
+所以这类记录被定为最高证据等级。<br>
+代价是稀少：结构测定昂贵，抗体-抗原复合物结构全球只有数千个量级。
+<b>这个天花板本身就是一件判定武器</b>，见 <a href="/course/judgment/">S8 的红旗清单</a>。</p></div>
+</div>
+
+<section>
+<h2>当堂自测</h2>
+<p class="sub">六道题，本节内容最多，题也最多。</p>
+<div class="quiz" data-bank="d1" data-sec="s3"><h3>S3 · 格式与标识符</h3></div>
+</section>
+<nav class="pager" aria-label="课程翻页"><a class="p" href="/course/binding-and-affinity/" rel="prev"><small>上一节</small>S2 · 结合与亲和力</a><a class="n" href="/course/hands-on-day1/" rel="next"><small>下一节</small>S4 · 动手（Day 1）</a></nav>
+</main>
+<footer>
+<div class="fcol"><b>AI4S for Programmers</b>
+<p>面向程序员的 AI for Science 入门课。所有生物概念都映射到你已经懂的编程概念，
+每个知识点都配一个能跑的实验。内容免费，源码开放。</p></div>
+<div class="fcol"><b>课程</b>
+<a href="/course/">课程总览</a><a href="/labs/">动手实验</a><a href="/quiz/">在线检验</a><a href="/glossary/">术语表</a></div>
+<div class="fcol"><b>资源</b>
+<a href="/resources/">视频与资料</a><a href="/en/">English</a>
+<a href="https://github.com/Runix-lab/ai4s-for-programmers" rel="noopener">GitHub 源码</a><a href="https://runixcloud.io" rel="noopener">Runix</a></div>
+<div class="fbot"><span>内容 CC BY-SA 4.0 · 代码 MIT · 最后更新 2026-08-13</span>
+<span>发现错误？<a href="https://github.com/Runix-lab/ai4s-for-programmers/issues" rel="noopener">提个 issue</a></span></div>
+</footer>
+</div>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/quiz.js" defer></script>
+</body>
+</html>
