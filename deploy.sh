@@ -8,7 +8,7 @@
 # keeps it. It is never printed and never written to disk.
 set -euo pipefail
 
-PROJECT="ai4s-course"
+PROJECT="runix-ai4s"   # matches the runix-<name> -> <name>.runixcloud.io convention
 PROD_BRANCH="main"
 DOMAIN="https://ai4s.runixcloud.io"
 SRC="$(cd "$(dirname "$0")" && pwd)"
@@ -53,6 +53,9 @@ if [ "$DRY" = "1" ]; then
   exit 0
 fi
 
+# The scoped Pages token cannot enumerate accounts, so the account id has to be
+# supplied explicitly or wrangler fails before it starts uploading.
+ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID:-30005bd01771d6fc41408e2c5df43ffd}"
 TOKEN="$(security find-generic-password -a "$USER" -s runix-cf-token -w 2>/dev/null || true)"
 if [ -z "$TOKEN" ]; then
   echo "No Cloudflare token in the keychain (service: runix-cf-token)." >&2
@@ -61,7 +64,8 @@ if [ -z "$TOKEN" ]; then
 fi
 
 echo "==> Upload to Cloudflare Pages project '$PROJECT'"
-CLOUDFLARE_API_TOKEN="$TOKEN" npx --yes wrangler@latest pages deploy dist \
+CLOUDFLARE_API_TOKEN="$TOKEN" CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" \
+  npx --yes wrangler@latest pages deploy dist \
   --project-name "$PROJECT" --branch "$PROD_BRANCH" --commit-dirty=true
 
 # Cloudflare's edge needs a moment to pick up a fresh deployment, and the

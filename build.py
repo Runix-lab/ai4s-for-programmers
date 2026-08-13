@@ -227,6 +227,8 @@ def head_block(page: dict, index: dict) -> str:
 <meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme:light)">
 <meta name="theme-color" content="#131519" media="(prefers-color-scheme:dark)">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon.ico" sizes="64x64">
+<link rel="apple-touch-icon" href="/assets/favicon.png">
 <link rel="stylesheet" href="/assets/style.css">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script type="application/ld+json">{json_ld(page, index)}</script>
@@ -546,6 +548,9 @@ def build(out: Path, quiet: bool = False) -> list[str]:
     # payload that no page ever links to.
     write_sitemap(out, index)
     build_og(out, index)
+    # crawlers and older browsers probe /favicon.ico directly; the PNG is served
+    # under that name on purpose — every current browser sniffs the content type.
+    shutil.copy2(ASSETS / "favicon.png", out / "favicon.ico")
     (out / "404.html").write_text(render(P.NOT_FOUND, index), encoding="utf-8")
 
     problems = lint(index, out)
