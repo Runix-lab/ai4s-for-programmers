@@ -409,4 +409,6 @@ footer .fbot a{color:var(--mut)}
 
 /* Headings and short labels wrap evenly; no single word left on a line of its own (2026-10-31). */
 h1, h2, h3, h4, .lead, figcaption, button { text-wrap: balance; }
+h1 .line { display: block; text-wrap: balance; }
+.eyebrow { line-height: 1.5; } .eyebrow .seg { white-space: nowrap; }
 p, li, dd, td { text-wrap: pretty; }

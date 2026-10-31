@@ -370,8 +370,12 @@ def render(page: dict, index: dict) -> str:
                 f"<span class=\"badge\">{b}</span>" for b in page["badges"]
             ) + "</div>"
         dek = f'<p class="dek">{page["dek"]}</p>' if page.get("dek") else ""
-        eyebrow = f'<p class="eyebrow">{esc(page["eyebrow"])}</p>' if page.get("eyebrow") else ""
-        hero = f"<header>{eyebrow}<h1>{page['h1']}</h1>{dek}{badges}</header>"
+        # The eyebrow breaks only between its " · " parts, never inside one ("免费开源" lost "开源" to its own line).
+        eyebrow = ('<p class="eyebrow">' + " · ".join(f'<span class="seg">{esc(s)}</span>' for s in page["eyebrow"].split(" · "))
+                   + "</p>") if page.get("eyebrow") else ""
+        # Each <br>-separated part is its own balanced line; balance across a forced break left "假" alone on phones.
+        h1 = "".join(f'<span class="line">{part}</span>' for part in page["h1"].split("<br>"))
+        hero = f"<header>{eyebrow}<h1>{h1}</h1>{dek}{badges}</header>"
 
     return "\n".join([
         head_block(page, index),
