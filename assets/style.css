@@ -406,3 +406,7 @@ footer .fbot{grid-column:1/-1;border-top:1px solid var(--line);padding-top:var(-
   color:var(--mut);font-size:var(--t-xs)}
 footer .fbot a{color:var(--mut)}
 @media(max-width:760px){footer{grid-template-columns:1fr;gap:var(--s5)}}
+
+/* Headings and short labels wrap evenly; no single word left on a line of its own (2026-10-31). */
+h1, h2, h3, h4, .lead, figcaption, button { text-wrap: balance; }
+p, li, dd, td { text-wrap: pretty; }
