@@ -29,7 +29,7 @@
   --measure:42em; --measure-tight:36em;
 
   --bg:#f7f6f3; --card:#fffefc; --ink:#16181d; --mut:#697080; --line:#e2dfd8;
-  --bio:#2e3f8c;  --bio-soft:#e6eaf8;
+  --bio:#2e3f8c; --on-bio:#fff; --bio-soft:#e6eaf8;
   --code:#1c6b58; --code-soft:#e0f1eb;
   --warn:#a8382c; --warn-soft:#f9e8e5;
   --gold:#8a6410; --gold-soft:#f8f0dd;
@@ -38,7 +38,7 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#131519; --card:#1b1e24; --ink:#e7e9ed; --mut:#98a0af; --line:#2e333c;
-  --bio:#93a7f2; --bio-soft:#1d2442;
+  --bio:#93a7f2; --on-bio:var(--bg); --bio-soft:#1d2442;
   --code:#5ecdab; --code-soft:#12312a;
   --warn:#f2907f; --warn-soft:#3b1f1b;
   --gold:#e0b357; --gold-soft:#342b14;
@@ -46,12 +46,12 @@
   --shadow-lift:0 2px 6px rgba(0,0,0,.34), 0 12px 30px rgba(0,0,0,.3);
 }}
 :root[data-theme="dark"]{--bg:#131519;--card:#1b1e24;--ink:#e7e9ed;--mut:#98a0af;--line:#2e333c;
-  --bio:#93a7f2;--bio-soft:#1d2442;--code:#5ecdab;--code-soft:#12312a;--warn:#f2907f;--warn-soft:#3b1f1b;
+  --bio:#93a7f2;--on-bio:var(--bg);--bio-soft:#1d2442;--code:#5ecdab;--code-soft:#12312a;--warn:#f2907f;--warn-soft:#3b1f1b;
   --gold:#e0b357;--gold-soft:#342b14;
   --shadow:0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.24);
   --shadow-lift:0 2px 6px rgba(0,0,0,.34), 0 12px 30px rgba(0,0,0,.3)}
 :root[data-theme="light"]{--bg:#f7f6f3;--card:#fffefc;--ink:#16181d;--mut:#697080;--line:#e2dfd8;
-  --bio:#2e3f8c;--bio-soft:#e6eaf8;--code:#1c6b58;--code-soft:#e0f1eb;--warn:#a8382c;--warn-soft:#f9e8e5;
+  --bio:#2e3f8c;--on-bio:#fff;--bio-soft:#e6eaf8;--code:#1c6b58;--code-soft:#e0f1eb;--warn:#a8382c;--warn-soft:#f9e8e5;
   --gold:#8a6410;--gold-soft:#f8f0dd;
   --shadow:0 1px 2px rgba(22,24,29,.04), 0 4px 14px rgba(22,24,29,.045);
   --shadow-lift:0 2px 4px rgba(22,24,29,.05), 0 10px 26px rgba(22,24,29,.07)}
@@ -176,7 +176,7 @@ p.sub{color:var(--mut);font-size:var(--t-sm);margin:0 0 var(--s5);max-width:var(
   border-right:1px solid var(--line)}
 .map .l b{color:var(--bio);display:block;font-size:var(--t-sm);margin-bottom:2px;font-weight:660}
 .map .r b{color:var(--code);display:block;margin-bottom:2px;font-weight:660}
-.map small{color:var(--mut);font-size:var(--t-xs);
+.map small{color:color-mix(in srgb,var(--mut) 80%,var(--ink)); /* --mut alone is 4.1:1 on the tinted cells */font-size:var(--t-xs);
   font-family:-apple-system,"PingFang SC",sans-serif;display:block;margin-top:3px;line-height:1.6}
 @media(max-width:640px){.map{grid-template-columns:1fr}
   .map .mid{border:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
@@ -344,7 +344,7 @@ pre a{color:#93a7f2}
 /* ══════════ quiz ══════════ */
 .quiz{border:1px solid var(--line);border-radius:var(--r-md);background:var(--card);
   margin:var(--s5) 0;overflow:hidden;box-shadow:var(--shadow)}
-.quiz>h3{margin:0;padding:var(--s3) var(--s6);background:var(--bio);color:#fff;
+.quiz>h3{margin:0;padding:var(--s3) var(--s6);background:var(--bio);color:var(--on-bio);
   font-size:var(--t-sm);letter-spacing:.06em;font-weight:700}
 .q{border-top:1px solid var(--line);padding:var(--s4) var(--s6)}
 .q>p{margin:0 0 var(--s3);font-weight:620;font-size:var(--t-base);max-width:none}
@@ -362,7 +362,7 @@ button{font-family:inherit;cursor:pointer}
 .reveal{background:none;border:1px solid var(--line);color:var(--mut);border-radius:var(--r-sm);
   padding:5px var(--s3);font-size:var(--t-xs)}
 .reveal:hover{border-color:var(--bio);color:var(--bio)}
-.grade{background:var(--bio);color:#fff;border:none;border-radius:var(--r-sm);
+.grade{background:var(--bio);color:var(--on-bio);border:none;border-radius:var(--r-sm);
   padding:var(--s3) var(--s7);font-size:var(--t-sm);font-weight:640;transition:filter .12s}
 .grade:hover{filter:brightness(1.12)}
 
@@ -406,3 +406,7 @@ footer .fbot{grid-column:1/-1;border-top:1px solid var(--line);padding-top:var(-
   color:var(--mut);font-size:var(--t-xs)}
 footer .fbot a{color:var(--mut)}
 @media(max-width:760px){footer{grid-template-columns:1fr;gap:var(--s5)}}
+
+/* Headings and short labels wrap evenly; no single word left on a line of its own (2026-10-31). */
+h1, h2, h3, h4, .lead, figcaption, button { text-wrap: balance; }
+p, li, dd, td { text-wrap: pretty; }
